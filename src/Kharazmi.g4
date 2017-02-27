@@ -1,8 +1,10 @@
 grammar Kharazmi;
 
-prog: block;
+prog: test;//block;
 
 block: (statement NEWLINE)* END;
+
+test: function_call;
 
 statement:
     | class_defenition
@@ -16,14 +18,20 @@ statement:
     | method_call
     ;
 
+//function_call:
+//    expr 'را' ID;
+
 function_call:
-    expr 'را' ID;
+    id (WS WITH WS parameters)? DOT
+    ;
 
 method_call:
-    ID ID (parameters)?;
+    id COMMA WS id (WS WITH WS parameters)? DOT
+    ;
 
 parameters:
-    expr (AND expr)*;
+    id COLON WS expr (WS AND WS id COLON WS expr)*
+    ;
 
 assignment_statement:
     ID EQUAL expr POSTFIX_DEFINE
@@ -34,9 +42,11 @@ instance_defenition:
     ;
 
 expr:
-    | ID
+    | id
     | NUMBER
     | STRING
+    | '(' function_call ')'
+    | '(' method_call ')'
 //    | expr operand expr
     | '(' expr ')'
     ;
@@ -44,7 +54,7 @@ expr:
 operand: ADD | MIN | MUL | SUB;
 
 class_defenition:
-    CLASS ID ':' (class_statement NEWLINE)* END
+    CLASS ID COLON (class_statement NEWLINE)* END
     ;
 
 class_statement:
@@ -54,7 +64,7 @@ class_statement:
 
 attributed_defenition: ID HAS;
 method_defenition:
-    PREFIX_DEFINE ID ':' (WITH ID (AND ID)*)? block
+    PREFIX_DEFINE ID COLON (WITH ID (AND ID)*)? block
     ;
 
 if_statement:
@@ -73,8 +83,12 @@ return_statement:
     RETURN ID
     ;
 
+id:
+    (ID WS+)* ID
+    ;
+
 // key words
-POSTFIX_DEFINE: 'است';
+POSTFIX_DEFINE: 'است' | 'اند' | 'هست' | 'هستند';
 PREFIX_DEFINE: 'تعریف';
 CLASS: 'رسته';
 IF: 'اگر';
@@ -90,6 +104,10 @@ END: 'خب';
 NEW: 'یک';
 EQUAL: 'برابر';
 
+DOT: '.';
+COMMA: '،';
+COLON: ':';
+
 // operands
 ADD: '+';
 MIN: '-';
@@ -97,8 +115,9 @@ MUL: '*';
 SUB: '/';
 
 // identifires
-ID: ('\u0600'..'\u06FF')+;
-NUMBER: ('\u06F1'.. '\u06F9')('\u06F0'.. '\u06F9')*;
+ID: ('\u0620'..'\u06FF')+;
+NUMBER: ('\u06F1'.. '\u06F9')('\u06F0'.. '\u06F9')* | ('1'..'9')('0'..'9')*;
 STRING: '«' .+? '»';
 
 NEWLINE: '\n';
+WS: ' ';
