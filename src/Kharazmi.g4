@@ -7,7 +7,7 @@ block: (statement NEWLINE)* END;
 test: function_call;
 
 statement:
-    | class_defenition
+      class_defenition
     | assignment_statement
     | instance_defenition
     | if_statement
@@ -42,7 +42,7 @@ instance_defenition:
     ;
 
 expr:
-    | id
+      id
     | NUMBER
     | STRING
     | '(' function_call ')'
@@ -58,7 +58,7 @@ class_defenition:
     ;
 
 class_statement:
-    | attributed_defenition
+      attributed_defenition
     | method_defenition
     ;
 
