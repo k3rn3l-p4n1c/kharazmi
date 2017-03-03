@@ -1,37 +1,42 @@
 grammar Kharazmi;
 
-prog: test;//block;
+prog: block;
 
-block: (statement NEWLINE)* END;
-
-test: function_call;
+block: (statement DOT)* END;
 
 statement:
       class_defenition
+    | function_defenition
     | assignment_statement
     | instance_defenition
     | if_statement
     | while_statement
+    | repeat_statement
     | foreach_statement
     | return_statement
-    | function_call
-    | method_call
+    | expr
+    | subjective_function_call
     ;
 
-//function_call:
-//    expr 'را' ID;
+subjective_function_call:
+    expr 'را' ID;
 
 function_call:
-    id (WS WITH WS parameters)? DOT
+    ID (arguments)?
     ;
 
 method_call:
-    id COMMA WS id (WS WITH WS parameters)? DOT
+    ID ID (arguments)?
     ;
 
-parameters:
-    id COLON WS expr (WS AND WS id COLON WS expr)*
+get_attr:
+    ID KASRE ID;
+
+arguments:
+      WITH expr (AND WITH expr)* (AND WITH ID COLON expr)*
+    | WITH ID COLON expr (AND WITH ID COLON expr)*
     ;
+
 
 assignment_statement:
     ID EQUAL expr POSTFIX_DEFINE
@@ -42,19 +47,22 @@ instance_defenition:
     ;
 
 expr:
-      id
+      ID
     | NUMBER
     | STRING
-    | '(' function_call ')'
-    | '(' method_call ')'
-//    | expr operand expr
+    | function_call
+    | get_attr
+    | method_call
+    | expr operand expr
     | '(' expr ')'
     ;
 
-operand: ADD | MIN | MUL | SUB;
+operand: ADD | MIN | MUL | SUB |
+            OR | AND |
+            GT | LT | EQUAL;
 
 class_defenition:
-    CLASS ID COLON (class_statement NEWLINE)* END
+    CLASS ID COLON (class_statement DOT)* END
     ;
 
 class_statement:
@@ -63,34 +71,46 @@ class_statement:
     ;
 
 attributed_defenition: ID HAS;
+
 method_defenition:
-    PREFIX_DEFINE ID COLON (WITH ID (AND ID)*)? block
+    PREFIX_DEFINE ID (WITH parameters)? COLON block
+    ;
+
+function_defenition:
+    FUNCTION ID (WITH parameters)? COLON block
+    ;
+
+parameters:
+    ID (AND ID)*
     ;
 
 if_statement:
-    IF expr block ELSE block
+    IF expr WAS COLON block ELSE block
     ;
 
 while_statement:
     WHILE expr block
     ;
 
+repeat_statement:
+    expr 'بار' COLON block
+    ;
+
 foreach_statement:
-    FOREACH ID IN expr block
+    FOREACH ID IN expr COLON block
     ;
 
 return_statement:
     RETURN ID
     ;
 
-id:
-    (ID WS+)* ID
-    ;
 
 // key words
 POSTFIX_DEFINE: 'است' | 'اند' | 'هست' | 'هستند';
 PREFIX_DEFINE: 'تعریف';
+WAS : 'بود' | 'باشد' | 'بودند' | 'باشند';
 CLASS: 'رسته';
+FUNCTION: 'تابع';
 IF: 'اگر';
 ELSE: 'وگرنه';
 WHILE: 'تا هنگامی که';
@@ -98,15 +118,21 @@ FOREACH: 'برای هر';
 IN: 'در';
 HAS: 'دارد';
 WITH: 'با';
-AND: 'و';
-RETURN: 'بازمیگرداند';
+RETURN: 'بازگردان';
 END: 'خب';
 NEW: 'یک';
-EQUAL: 'برابر';
+
+AND: 'و';
+OR: 'یا';
+EQUAL: 'برابر' | 'مساوی' | '=';
+
+GT: '>';
+LT: '<';
 
 DOT: '.';
 COMMA: '،';
 COLON: ':';
+KASRE: 'ِ';
 
 // operands
 ADD: '+';
@@ -119,5 +145,5 @@ ID: ('\u0620'..'\u06FF')+;
 NUMBER: ('\u06F1'.. '\u06F9')('\u06F0'.. '\u06F9')* | ('1'..'9')('0'..'9')*;
 STRING: '«' .+? '»';
 
-NEWLINE: '\n';
-WS: ' ';
+//NEWLINE: '\n';
+//WS: ' ';
