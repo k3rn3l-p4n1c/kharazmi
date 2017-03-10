@@ -19,7 +19,7 @@ compiler.iml
 *.ear
 
 # Antlr4
-*.tokens
+src/*.tokens
 
 # temperory
 src/Kharazmi*.java

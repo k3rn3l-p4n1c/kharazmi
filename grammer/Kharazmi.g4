@@ -5,31 +5,31 @@ prog: block;
 block: (statement DOT)* END;
 
 statement:
-      class_defenition
-    | function_defenition
-    | assignment_statement
-    | instance_defenition
-    | if_statement
-    | while_statement
-    | repeat_statement
-    | foreach_statement
-    | return_statement
+      classDefinition
+    | functionDefinition
+    | assignmentStatement
+    | instanceDefinition
+    | ifStatement
+    | whileStatement
+    | repeatStatement
+    | foreachStatement
+    | returnStatement
     | expr
-    | subjective_function_call
+    | subjectiveFunctionCall
     ;
 
-subjective_function_call:
+subjectiveFunctionCall:
     expr 'را' ID;
 
-function_call:
+functionCall:
     ID (arguments)?
     ;
 
-method_call:
+methodCall:
     ID ID (arguments)?
     ;
 
-get_attr:
+getAttr:
     ID KASRE ID;
 
 arguments:
@@ -38,11 +38,11 @@ arguments:
     ;
 
 
-assignment_statement:
+assignmentStatement:
     ID EQUAL expr POSTFIX_DEFINE
     ;
 
-instance_defenition:
+instanceDefinition:
     ID NEW expr POSTFIX_DEFINE
     ;
 
@@ -50,9 +50,9 @@ expr:
       ID
     | NUMBER
     | STRING
-    | function_call
-    | get_attr
-    | method_call
+    | functionCall
+    | getAttr
+    | methodCall
     | expr operand expr
     | '(' expr ')'
     ;
@@ -61,22 +61,22 @@ operand: ADD | MIN | MUL | SUB |
             OR | AND |
             GT | LT | EQUAL;
 
-class_defenition:
-    CLASS ID COLON (class_statement DOT)* END
+classDefinition:
+    CLASS ID COLON (classStatement DOT)* END
     ;
 
-class_statement:
-      attributed_defenition
-    | method_defenition
+classStatement:
+      attributedDefinition
+    | methodDefinition
     ;
 
-attributed_defenition: ID HAS;
+attributedDefinition: ID HAS;
 
-method_defenition:
+methodDefinition:
     PREFIX_DEFINE ID (WITH parameters)? COLON block
     ;
 
-function_defenition:
+functionDefinition:
     FUNCTION ID (WITH parameters)? COLON block
     ;
 
@@ -84,23 +84,23 @@ parameters:
     ID (AND ID)*
     ;
 
-if_statement:
+ifStatement:
     IF expr WAS COLON block ELSE block
     ;
 
-while_statement:
+whileStatement:
     WHILE expr block
     ;
 
-repeat_statement:
+repeatStatement:
     expr 'بار' COLON block
     ;
 
-foreach_statement:
+foreachStatement:
     FOREACH ID IN expr COLON block
     ;
 
-return_statement:
+returnStatement:
     RETURN ID
     ;
 
