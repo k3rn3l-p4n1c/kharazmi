@@ -46,7 +46,7 @@ instanceDefinition:
     ID NEW expr POSTFIX_DEFINE
     ;
 
-expr:
+expr returns[String type, Object value]:
       ID
     | NUMBER
     | STRING
@@ -147,3 +147,4 @@ STRING: '«' .+? '»';
 
 //NEWLINE: '\n';
 //WS: ' ';
+WS : [ \t\r\n]+ -> skip ;
