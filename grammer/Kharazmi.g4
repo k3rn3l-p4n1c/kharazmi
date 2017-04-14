@@ -2,7 +2,7 @@ grammar Kharazmi;
 
 prog: block EOF;
 
-block: (statement DOT)* END;
+block: (statement)*;
 
 statement:
       classDefinition
@@ -13,20 +13,22 @@ statement:
     | whileStatement
     | repeatStatement
     | foreachStatement
-    | returnStatement
-    | expr
+    | returnStatement // TODO: remove, blocks outside functions cannot return something.
+    | functionCall
+//    | getAttr
+    | methodCall
     | subjectiveFunctionCall
     ;
 
 subjectiveFunctionCall:
-    expr 'را' ID;
+    expr 'را' ID DOT;
 
 functionCall:
-    ID (arguments)?
+    ID (arguments)? DOT
     ;
 
 methodCall:
-    ID ID (arguments)?
+    ID ID (arguments)? DOT
     ;
 
 getAttr:
@@ -39,11 +41,11 @@ arguments:
 
 
 assignmentStatement:
-    ID EQUAL expr POSTFIX_DEFINE
+    ID EQUAL expr POSTFIX_DEFINE DOT
     ;
 
 instanceDefinition:
-    ID NEW expr POSTFIX_DEFINE
+    ID NEW expr POSTFIX_DEFINE DOT
     ;
 
 expr returns[String type, Object value]:
@@ -62,7 +64,7 @@ operand: ADD | MIN | MUL | SUB |
             GT | LT | EQUAL;
 
 classDefinition:
-    CLASS ID COLON (classStatement DOT)* END
+    CLASS ID COLON (classStatement)* END
     ;
 
 classStatement:
@@ -70,14 +72,14 @@ classStatement:
     | methodDefinition
     ;
 
-attributedDefinition: ID HAS;
+attributedDefinition: ID HAS DOT;
 
 methodDefinition:
-    PREFIX_DEFINE ID (WITH parameters)? COLON block
+    PREFIX_DEFINE ID (WITH parameters)? COLON block END
     ;
 
 functionDefinition:
-    FUNCTION ID (WITH parameters)? COLON block
+    FUNCTION ID (WITH parameters)? COLON block END
     ;
 
 parameters:
@@ -85,23 +87,23 @@ parameters:
     ;
 
 ifStatement:
-    IF expr WAS COLON block (ELSE block)?
+    IF expr WAS COLON block (ELSE block)? END
     ;
 
 whileStatement:
-    WHILE expr block
+    WHILE expr block END
     ;
 
 repeatStatement:
-    expr 'بار' COLON block
+    expr REPEAT COLON block END
     ;
 
 foreachStatement:
-    FOREACH ID IN expr COLON block
+    FOREACH ID IN expr COLON block END
     ;
 
 returnStatement:
-    RETURN ID
+    RETURN ID DOT
     ;
 
 
@@ -126,8 +128,8 @@ AND: 'و';
 OR: 'یا';
 EQUAL: 'برابر' | 'مساوی' | '=';
 
-GT: '>';
-LT: '<';
+GT: '<' | 'بزرگتر';
+LT: '>' | 'کوچکتر';
 
 DOT: '.';
 COMMA: '،';
@@ -140,10 +142,12 @@ MIN: '-';
 MUL: '*';
 SUB: '/';
 
+REPEAT: 'بار';
+
 // identifires
-ID: ('\u0620'..'\u06EF')('\u0620'..'\u06FF' | '0'..'9')*;
+ID: ('\u0620'..'\u06EF')('\u0620'..'\u06FF' | '‌' | '0'..'9')*;
 NUMBER: ('\u06F1'.. '\u06F9')('\u06F0'.. '\u06F9')* | ('1'..'9')('0'..'9')*;
-STRING: '«' .+? '»';
+STRING: '«' .+? '»' | '»' .+? '«';
 
 //NEWLINE: '\n';
 //WS: ' ';
