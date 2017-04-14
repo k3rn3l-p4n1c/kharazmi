@@ -6,6 +6,7 @@
 # User-specific stuff:
 .idea/
 compiler.iml
+kharazmi.iml
 
 # IntelliJ
 /out/
@@ -23,3 +24,4 @@ src/*.tokens
 
 # temperory
 src/Kharazmi*.java
+.DS_Store
