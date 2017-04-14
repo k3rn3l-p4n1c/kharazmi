@@ -1,6 +1,6 @@
 grammar Kharazmi;
 
-prog: block;
+prog: block EOF;
 
 block: (statement DOT)* END;
 
@@ -147,4 +147,5 @@ STRING: '«' .+? '»';
 
 //NEWLINE: '\n';
 //WS: ' ';
-WS : [ \t\r\n]+ -> skip ;
+//WS : [ \t\r\n]+ -> skip ;
+WS : [ \t\n\r]+ -> channel(HIDDEN) ;
