@@ -85,7 +85,7 @@ parameters:
     ;
 
 ifStatement:
-    IF expr WAS COLON block ELSE block
+    IF expr WAS COLON block (ELSE block)?
     ;
 
 whileStatement:
@@ -141,7 +141,7 @@ MUL: '*';
 SUB: '/';
 
 // identifires
-ID: ('\u0620'..'\u06FF')+;
+ID: ('\u0620'..'\u06EF')('\u0620'..'\u06FF' | '0'..'9')*;
 NUMBER: ('\u06F1'.. '\u06F9')('\u06F0'.. '\u06F9')* | ('1'..'9')('0'..'9')*;
 STRING: '«' .+? '»';
 

@@ -92,7 +92,7 @@ public class KharazmiTyper implements KharazmiListener {
 
     @Override
     public void enterAssignmentStatement(KharazmiParser.AssignmentStatementContext ctx) {
-
+//        System.out.println(ctx.ID().getSymbol().getText());
     }
 
     @Override
@@ -112,7 +112,14 @@ public class KharazmiTyper implements KharazmiListener {
 
     @Override
     public void enterExpr(KharazmiParser.ExprContext ctx) {
-
+        if (ctx.ID() != null) {
+            // ctx.type = from symbol table
+        } else if (ctx.STRING() != null) {
+            ctx.type = "str";
+        } else if (ctx.NUMBER() != null) {
+            ctx.type = "int";
+        }
+//        System.out.println(ctx.type);
     }
 
     @Override
