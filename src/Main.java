@@ -17,7 +17,7 @@ import java.io.IOException;
  */
 public class Main {
     public static void main(String[] args) throws IOException {
-        String fileName = "samples/source.kh";
+        String fileName = "samples/source2.kh";
         File file = new File(fileName);
         FileInputStream fis = null;
 
@@ -53,6 +53,7 @@ public class Main {
 
         // Walk the tree again to translate to java
         walker.walk(new KharazmiTyper(), tree);
+//        walker.walk(new KharazmiVariable(), tree);
 
         // Print LISP-style tree
 //            System.out.println(tree.toStringTree(parser));

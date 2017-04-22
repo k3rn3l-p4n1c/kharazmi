@@ -6,10 +6,19 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 import parser.KharazmiListener;
 import parser.KharazmiParser;
 
+import java.util.HashMap;
+
+
 /**
  * Created by Bardia on 3/10/17.
  */
 public class KharazmiTyper implements KharazmiListener {
+    HashMap<String, String> symbolTable;
+
+    public KharazmiTyper() {
+        symbolTable = new HashMap<>();
+    }
+
     @Override
     public void enterProg(KharazmiParser.ProgContext ctx) {
 
@@ -92,12 +101,19 @@ public class KharazmiTyper implements KharazmiListener {
 
     @Override
     public void enterAssignmentStatement(KharazmiParser.AssignmentStatementContext ctx) {
-//        System.out.println(ctx.ID().getSymbol().getText());
+
     }
 
     @Override
     public void exitAssignmentStatement(KharazmiParser.AssignmentStatementContext ctx) {
-
+        String variable_name = ctx.ID().getSymbol().getText();
+        String variable_type = ctx.expr().type;
+        if (symbolTable.containsKey(variable_name)) {
+            if (!symbolTable.get(variable_name).equals(variable_type)) {
+                throw new RuntimeException(variable_name + " except " + symbolTable.get(variable_name) + " but it got " + variable_type);
+            }
+        } else
+            symbolTable.put(variable_name, variable_type);
     }
 
     @Override
@@ -112,19 +128,29 @@ public class KharazmiTyper implements KharazmiListener {
 
     @Override
     public void enterExpr(KharazmiParser.ExprContext ctx) {
-        if (ctx.ID() != null) {
-            // ctx.type = from symbol table
-        } else if (ctx.STRING() != null) {
-            ctx.type = "str";
-        } else if (ctx.NUMBER() != null) {
-            ctx.type = "int";
-        }
-//        System.out.println(ctx.type);
+
     }
 
     @Override
     public void exitExpr(KharazmiParser.ExprContext ctx) {
-
+        if (ctx.ID() != null) {
+            if (symbolTable.containsKey(ctx.ID().getText())) {
+                ctx.type = symbolTable.get(ctx.ID().getText());
+            } else {
+                throw new RuntimeException(ctx.ID().getText() + "is used before assignment");
+            }
+        } else if (ctx.STRING() != null) {
+            ctx.type = "str";
+        } else if (ctx.NUMBER() != null) {
+            ctx.type = "int";
+        } else if (ctx.operand() != null) {
+            System.out.println(ctx.expr(0).type);
+            if (ctx.expr(0).type.equals(ctx.expr(1).type)) {
+                ctx.type = ctx.expr(0).type;
+            } else {
+                throw new RuntimeException("Can not apply operand " + ctx.operand().getText() + " between "+ctx.expr(0).type + " and "+ctx.expr(1).type);
+            }
+        }
     }
 
     @Override
