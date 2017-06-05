@@ -87,7 +87,7 @@ parameters:
     ;
 
 ifStatement:
-    IF expr WAS COLON block (ELSE block)? END
+    IF expr WAS COLON block (ELSE COLON block)? END
     ;
 
 whileStatement:
