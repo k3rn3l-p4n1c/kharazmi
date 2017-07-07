@@ -12,10 +12,10 @@ import java.util.HashMap;
 /**
  * Created by Bardia on 3/10/17.
  */
-public class KharazmiTyper implements KharazmiListener {
+public class KharazmiCodeGenerator implements KharazmiListener {
     HashMap<String, String> symbolTable;
 
-    public KharazmiTyper() {
+    public KharazmiCodeGenerator() {
         symbolTable = new HashMap<>();
     }
 
@@ -56,7 +56,11 @@ public class KharazmiTyper implements KharazmiListener {
 
     @Override
     public void exitSubjectiveFunctionCall(KharazmiParser.SubjectiveFunctionCallContext ctx) {
-
+        if (ctx.ID().getText().equals("چاپکن")){
+            KharazmiHelperFunctions.PrintFunctionCall(ctx.expr());
+        }else{
+            // TODO: call function ctx.ID()
+        }
     }
 
     @Override
@@ -147,6 +151,7 @@ public class KharazmiTyper implements KharazmiListener {
             System.out.println(ctx.expr(0).type);
             if (ctx.expr(0).type.equals(ctx.expr(1).type)) {
                 ctx.type = ctx.expr(0).type;
+                // TODO print temp statement
             } else {
                 throw new RuntimeException("Can not apply operand " + ctx.operand().getText() + " between "+ctx.expr(0).type + " and "+ctx.expr(1).type);
             }

@@ -1,4 +1,4 @@
-import listeners.KharazmiTyper;
+import listeners.KharazmiCodeGenerator;
 import listeners.ThrowingErrorListener;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
@@ -17,7 +17,7 @@ import java.io.IOException;
  */
 public class Main {
     public static void main(String[] args) throws IOException {
-        String fileName = "samples/source2.kh";
+        String fileName = "samples/1_print.kh";
         File file = new File(fileName);
         FileInputStream fis = null;
 
@@ -52,10 +52,10 @@ public class Main {
 //            System.out.println(); // print a \n after translation
 
         // Walk the tree again to translate to java
-        walker.walk(new KharazmiTyper(), tree);
+        walker.walk(new KharazmiCodeGenerator(), tree);
 //        walker.walk(new KharazmiVariable(), tree);
 
-        // Print LISP-style tree
+        // PrintFunctionCall LISP-style tree
 //            System.out.println(tree.toStringTree(parser));
 //        } catch (IOException e) {
 //            // TODO Auto-generated catch block

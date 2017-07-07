@@ -4,13 +4,14 @@
 ; Analyzer and Disassembler for Java class files
 ; (Jasmin syntax 2, http://jasmin.sourceforge.net)
 ;
-; ClassFileAnalyzer, version 0.7.0
+; ClassFileAnalyzer, version 0.7.0 
 
 
 .bytecode 52.0
 .source Test.java
 .class public Test
 .super java/lang/Object
+.inner class somthing inner Test$1somthing ; <not a member>
 
 .method public <init>()V
   .limit stack 1
@@ -22,158 +23,19 @@
 .end method
 
 .method public static main([Ljava/lang/String;)V
-  .limit stack 1
-  .limit locals 51
-  .line 5
-  0: iconst_0
-  1: istore_1
-  .line 6
-  2: iconst_1
-  3: istore_2
-  .line 7
-  4: iconst_2
-  5: istore_3
-  .line 8
-  6: iconst_3
-  7: istore 4
-  .line 9
-  9: iconst_4
-  10: istore 5
-  .line 10
-  12: iconst_5
-  13: istore 6
-  .line 11
-  15: bipush 6
-  17: istore 7
-  .line 12
-  19: bipush 7
-  21: istore 8
+  .limit stack 3
+  .limit locals 2
   .line 13
-  23: bipush 8
-  25: istore 9
+  0: ldc "salam"
+  2: astore_1
   .line 14
-  27: bipush 9
-  29: istore 10
-  .line 15
-  31: bipush 10
-  33: istore 11
+  3: new Test$1somthing
+  6: dup
+  7: aload_1
+  8: invokespecial Test$1somthing/<init>(Ljava/lang/String;)V
+  11: pop
   .line 16
-  35: bipush 11
-  37: istore 12
-  .line 17
-  39: bipush 12
-  41: istore 13
-  .line 18
-  43: bipush 13
-  45: istore 14
-  .line 19
-  47: bipush 14
-  49: istore 15
-  .line 20
-  51: bipush 15
-  53: istore 16
-  .line 21
-  55: bipush 16
-  57: istore 17
-  .line 22
-  59: bipush 17
-  61: istore 18
-  .line 23
-  63: bipush 18
-  65: istore 19
-  .line 24
-  67: bipush 19
-  69: istore 20
-  .line 25
-  71: bipush 20
-  73: istore 21
-  .line 26
-  75: bipush 21
-  77: istore 22
-  .line 27
-  79: bipush 22
-  81: istore 23
-  .line 28
-  83: bipush 23
-  85: istore 24
-  .line 29
-  87: bipush 24
-  89: istore 25
-  .line 30
-  91: bipush 25
-  93: istore 26
-  .line 31
-  95: bipush 26
-  97: istore 27
-  .line 32
-  99: bipush 27
-  101: istore 28
-  .line 33
-  103: bipush 28
-  105: istore 29
-  .line 34
-  107: bipush 29
-  109: istore 30
-  .line 35
-  111: bipush 30
-  113: istore 31
-  .line 36
-  115: bipush 31
-  117: istore 32
-  .line 37
-  119: bipush 32
-  121: istore 33
-  .line 38
-  123: bipush 33
-  125: istore 34
-  .line 39
-  127: bipush 34
-  129: istore 35
-  .line 40
-  131: bipush 35
-  133: istore 36
-  .line 41
-  135: bipush 36
-  137: istore 37
-  .line 42
-  139: bipush 37
-  141: istore 38
-  .line 43
-  143: bipush 38
-  145: istore 39
-  .line 44
-  147: bipush 39
-  149: istore 40
-  .line 45
-  151: bipush 40
-  153: istore 41
-  .line 46
-  155: bipush 41
-  157: istore 42
-  .line 47
-  159: bipush 42
-  161: istore 43
-  .line 48
-  163: bipush 43
-  165: istore 44
-  .line 49
-  167: bipush 44
-  169: istore 45
-  .line 50
-  171: bipush 45
-  173: istore 46
-  .line 51
-  175: bipush 46
-  177: istore 47
-  .line 52
-  179: bipush 47
-  181: istore 48
-  .line 53
-  183: bipush 48
-  185: istore 49
-  .line 54
-  187: bipush 49
-  189: istore 50
-  .line 55
-  191: return
+  12: return
 .end method
+
+
