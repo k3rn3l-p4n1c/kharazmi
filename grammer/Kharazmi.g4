@@ -21,7 +21,7 @@ statement:
     ;
 
 subjectiveFunctionCall:
-      expr 'را' ID DOT;
+    expr 'را' ID DOT;
 
 functionCall:
     ID (arguments)? DOT
@@ -87,7 +87,7 @@ parameters:
     ;
 
 ifStatement:
-    IF expr WAS COLON block (ELSE COLON block)? END
+    IF expr WAS COLON block (ELSE block)? END
     ;
 
 whileStatement:
@@ -147,8 +147,7 @@ REPEAT: 'بار';
 // identifires
 ID: ('\u0620'..'\u06EF')('\u0620'..'\u06FF' | '‌' | '0'..'9')*;
 NUMBER: ('\u06F1'.. '\u06F9')('\u06F0'.. '\u06F9')* | ('1'..'9')('0'..'9')*;
-STRING: '«' STRING_VALUE '»' | '»' STRING_VALUE '«';
-STRING_VALUE: .+?;
+STRING: '«' .+? '»' | '»' .+? '«';
 
 //NEWLINE: '\n';
 //WS: ' ';
