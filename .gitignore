@@ -24,6 +24,5 @@ kharazmi.iml
 src/*.tokens
 
 # temperory
-src/Kharazmi*.java
 gen/
 .DS_Store
