@@ -1,4 +1,4 @@
-// Generated from /Users/Bardia/IdeaProjects/compiler/grammer/Kharazmi.g4 by ANTLR 4.6
+// Generated from /Users/Bardia/IdeaProjects/compiler/grammer/Kharazmi.g4 by ANTLR 4.7
 package parser;
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast"})
 public class KharazmiParser extends Parser {
-	static { RuntimeMetaData.checkVersion("4.6", RuntimeMetaData.VERSION); }
+	static { RuntimeMetaData.checkVersion("4.7", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
 	protected static final PredictionContextCache _sharedContextCache =
@@ -21,7 +21,7 @@ public class KharazmiParser extends Parser {
 		FUNCTION=8, IF=9, ELSE=10, WHILE=11, FOREACH=12, IN=13, HAS=14, WITH=15, 
 		RETURN=16, END=17, NEW=18, AND=19, OR=20, EQUAL=21, GT=22, LT=23, DOT=24, 
 		COMMA=25, COLON=26, KASRE=27, ADD=28, MIN=29, MUL=30, SUB=31, REPEAT=32, 
-		ID=33, NUMBER=34, STRING=35, WS=36;
+		ID=33, NUMBER=34, STRING=35, STRING_VALUE=36, WS=37;
 	public static final int
 		RULE_prog = 0, RULE_block = 1, RULE_statement = 2, RULE_subjectiveFunctionCall = 3, 
 		RULE_functionCall = 4, RULE_methodCall = 5, RULE_getAttr = 6, RULE_arguments = 7, 
@@ -39,17 +39,21 @@ public class KharazmiParser extends Parser {
 	};
 
 	private static final String[] _LITERAL_NAMES = {
-		null, "'را'", "'('", "')'", null, "'تعریف'", null, "'رسته'", "'تابع'", 
-		"'اگر'", "'وگرنه'", "'تا هنگامی که'", "'برای هر'", "'در'", "'دارد'", "'با'", 
-		"'بازگردان'", "'خب'", "'یک'", "'و'", "'یا'", null, null, null, "'.'", 
-		"'،'", "':'", "'ِ'", "'+'", "'-'", "'*'", "'/'", "'بار'"
+		null, "'\u0631\u0627'", "'('", "')'", null, "'\u062A\u0639\u0631\u06CC\u0641'", 
+		null, "'\u0631\u0633\u062A\u0647'", "'\u062A\u0627\u0628\u0639'", "'\u0627\u06AF\u0631'", 
+		"'\u0648\u06AF\u0631\u0646\u0647'", "'\u062A\u0627 \u0647\u0646\u06AF\u0627\u0645\u06CC \u06A9\u0647'", 
+		"'\u0628\u0631\u0627\u06CC \u0647\u0631'", "'\u062F\u0631'", "'\u062F\u0627\u0631\u062F'", 
+		"'\u0628\u0627'", "'\u0628\u0627\u0632\u06AF\u0631\u062F\u0627\u0646'", 
+		"'\u062E\u0628'", "'\u06CC\u06A9'", "'\u0648'", "'\u06CC\u0627'", null, 
+		null, null, "'.'", "'\u060C'", "':'", "'\u0650'", "'+'", "'-'", "'*'", 
+		"'/'", "'\u0628\u0627\u0631'"
 	};
 	private static final String[] _SYMBOLIC_NAMES = {
 		null, null, null, null, "POSTFIX_DEFINE", "PREFIX_DEFINE", "WAS", "CLASS", 
 		"FUNCTION", "IF", "ELSE", "WHILE", "FOREACH", "IN", "HAS", "WITH", "RETURN", 
 		"END", "NEW", "AND", "OR", "EQUAL", "GT", "LT", "DOT", "COMMA", "COLON", 
 		"KASRE", "ADD", "MIN", "MUL", "SUB", "REPEAT", "ID", "NUMBER", "STRING", 
-		"WS"
+		"STRING_VALUE", "WS"
 	};
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
@@ -1459,7 +1463,10 @@ public class KharazmiParser extends Parser {
 			return getRuleContext(ExprContext.class,0);
 		}
 		public TerminalNode WAS() { return getToken(KharazmiParser.WAS, 0); }
-		public TerminalNode COLON() { return getToken(KharazmiParser.COLON, 0); }
+		public List<TerminalNode> COLON() { return getTokens(KharazmiParser.COLON); }
+		public TerminalNode COLON(int i) {
+			return getToken(KharazmiParser.COLON, i);
+		}
 		public List<BlockContext> block() {
 			return getRuleContexts(BlockContext.class);
 		}
@@ -1504,7 +1511,7 @@ public class KharazmiParser extends Parser {
 			match(COLON);
 			setState(214);
 			block();
-			setState(217);
+			setState(218);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==ELSE) {
@@ -1512,11 +1519,13 @@ public class KharazmiParser extends Parser {
 				setState(215);
 				match(ELSE);
 				setState(216);
+				match(COLON);
+				setState(217);
 				block();
 				}
 			}
 
-			setState(219);
+			setState(220);
 			match(END);
 			}
 		}
@@ -1565,13 +1574,13 @@ public class KharazmiParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(221);
-			match(WHILE);
 			setState(222);
-			expr(0);
+			match(WHILE);
 			setState(223);
-			block();
+			expr(0);
 			setState(224);
+			block();
+			setState(225);
 			match(END);
 			}
 		}
@@ -1621,15 +1630,15 @@ public class KharazmiParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(226);
-			expr(0);
 			setState(227);
-			match(REPEAT);
+			expr(0);
 			setState(228);
-			match(COLON);
+			match(REPEAT);
 			setState(229);
-			block();
+			match(COLON);
 			setState(230);
+			block();
+			setState(231);
 			match(END);
 			}
 		}
@@ -1681,19 +1690,19 @@ public class KharazmiParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(232);
-			match(FOREACH);
 			setState(233);
-			match(ID);
+			match(FOREACH);
 			setState(234);
-			match(IN);
+			match(ID);
 			setState(235);
-			expr(0);
+			match(IN);
 			setState(236);
-			match(COLON);
+			expr(0);
 			setState(237);
-			block();
+			match(COLON);
 			setState(238);
+			block();
+			setState(239);
 			match(END);
 			}
 		}
@@ -1737,11 +1746,11 @@ public class KharazmiParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(240);
-			match(RETURN);
 			setState(241);
-			match(ID);
+			match(RETURN);
 			setState(242);
+			match(ID);
+			setState(243);
 			match(DOT);
 			}
 		}
@@ -1772,7 +1781,7 @@ public class KharazmiParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3&\u00f7\4\2\t\2\4"+
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3\'\u00f8\4\2\t\2\4"+
 		"\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t"+
 		"\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\4\20\t\20\4\21\t\21\4\22\t\22"+
 		"\4\23\t\23\4\24\t\24\4\25\t\25\4\26\t\26\4\27\t\27\4\30\t\30\3\2\3\2\3"+
@@ -1787,31 +1796,31 @@ public class KharazmiParser extends Parser {
 		"\13\16\3\16\3\16\3\17\3\17\5\17\u00b3\n\17\3\20\3\20\3\20\3\20\3\21\3"+
 		"\21\3\21\3\21\5\21\u00bd\n\21\3\21\3\21\3\21\3\21\3\22\3\22\3\22\3\22"+
 		"\5\22\u00c7\n\22\3\22\3\22\3\22\3\22\3\23\3\23\3\23\7\23\u00d0\n\23\f"+
-		"\23\16\23\u00d3\13\23\3\24\3\24\3\24\3\24\3\24\3\24\3\24\5\24\u00dc\n"+
-		"\24\3\24\3\24\3\25\3\25\3\25\3\25\3\25\3\26\3\26\3\26\3\26\3\26\3\26\3"+
-		"\27\3\27\3\27\3\27\3\27\3\27\3\27\3\27\3\30\3\30\3\30\3\30\3\30\2\3\26"+
-		"\31\2\4\6\b\n\f\16\20\22\24\26\30\32\34\36 \"$&(*,.\2\3\4\2\25\31\36!"+
-		"\u00fe\2\60\3\2\2\2\4\66\3\2\2\2\6E\3\2\2\2\bG\3\2\2\2\nL\3\2\2\2\fR\3"+
-		"\2\2\2\16Y\3\2\2\2\20\177\3\2\2\2\22\u0081\3\2\2\2\24\u0087\3\2\2\2\26"+
-		"\u0098\3\2\2\2\30\u00a3\3\2\2\2\32\u00a5\3\2\2\2\34\u00b2\3\2\2\2\36\u00b4"+
-		"\3\2\2\2 \u00b8\3\2\2\2\"\u00c2\3\2\2\2$\u00cc\3\2\2\2&\u00d4\3\2\2\2"+
-		"(\u00df\3\2\2\2*\u00e4\3\2\2\2,\u00ea\3\2\2\2.\u00f2\3\2\2\2\60\61\5\4"+
-		"\3\2\61\62\7\2\2\3\62\3\3\2\2\2\63\65\5\6\4\2\64\63\3\2\2\2\658\3\2\2"+
-		"\2\66\64\3\2\2\2\66\67\3\2\2\2\67\5\3\2\2\28\66\3\2\2\29F\5\32\16\2:F"+
-		"\5\"\22\2;F\5\22\n\2<F\5\24\13\2=F\5&\24\2>F\5(\25\2?F\5*\26\2@F\5,\27"+
-		"\2AF\5.\30\2BF\5\n\6\2CF\5\f\7\2DF\5\b\5\2E9\3\2\2\2E:\3\2\2\2E;\3\2\2"+
-		"\2E<\3\2\2\2E=\3\2\2\2E>\3\2\2\2E?\3\2\2\2E@\3\2\2\2EA\3\2\2\2EB\3\2\2"+
-		"\2EC\3\2\2\2ED\3\2\2\2F\7\3\2\2\2GH\5\26\f\2HI\7\3\2\2IJ\7#\2\2JK\7\32"+
-		"\2\2K\t\3\2\2\2LN\7#\2\2MO\5\20\t\2NM\3\2\2\2NO\3\2\2\2OP\3\2\2\2PQ\7"+
-		"\32\2\2Q\13\3\2\2\2RS\7#\2\2SU\7#\2\2TV\5\20\t\2UT\3\2\2\2UV\3\2\2\2V"+
-		"W\3\2\2\2WX\7\32\2\2X\r\3\2\2\2YZ\7#\2\2Z[\7\35\2\2[\\\7#\2\2\\\17\3\2"+
-		"\2\2]^\7\21\2\2^d\5\26\f\2_`\7\25\2\2`a\7\21\2\2ac\5\26\f\2b_\3\2\2\2"+
-		"cf\3\2\2\2db\3\2\2\2de\3\2\2\2en\3\2\2\2fd\3\2\2\2gh\7\25\2\2hi\7\21\2"+
-		"\2ij\7#\2\2jk\7\34\2\2km\5\26\f\2lg\3\2\2\2mp\3\2\2\2nl\3\2\2\2no\3\2"+
-		"\2\2o\u0080\3\2\2\2pn\3\2\2\2qr\7\21\2\2rs\7#\2\2st\7\34\2\2t|\5\26\f"+
-		"\2uv\7\25\2\2vw\7\21\2\2wx\7#\2\2xy\7\34\2\2y{\5\26\f\2zu\3\2\2\2{~\3"+
-		"\2\2\2|z\3\2\2\2|}\3\2\2\2}\u0080\3\2\2\2~|\3\2\2\2\177]\3\2\2\2\177q"+
-		"\3\2\2\2\u0080\21\3\2\2\2\u0081\u0082\7#\2\2\u0082\u0083\7\27\2\2\u0083"+
+		"\23\16\23\u00d3\13\23\3\24\3\24\3\24\3\24\3\24\3\24\3\24\3\24\5\24\u00dd"+
+		"\n\24\3\24\3\24\3\25\3\25\3\25\3\25\3\25\3\26\3\26\3\26\3\26\3\26\3\26"+
+		"\3\27\3\27\3\27\3\27\3\27\3\27\3\27\3\27\3\30\3\30\3\30\3\30\3\30\2\3"+
+		"\26\31\2\4\6\b\n\f\16\20\22\24\26\30\32\34\36 \"$&(*,.\2\3\4\2\25\31\36"+
+		"!\2\u00ff\2\60\3\2\2\2\4\66\3\2\2\2\6E\3\2\2\2\bG\3\2\2\2\nL\3\2\2\2\f"+
+		"R\3\2\2\2\16Y\3\2\2\2\20\177\3\2\2\2\22\u0081\3\2\2\2\24\u0087\3\2\2\2"+
+		"\26\u0098\3\2\2\2\30\u00a3\3\2\2\2\32\u00a5\3\2\2\2\34\u00b2\3\2\2\2\36"+
+		"\u00b4\3\2\2\2 \u00b8\3\2\2\2\"\u00c2\3\2\2\2$\u00cc\3\2\2\2&\u00d4\3"+
+		"\2\2\2(\u00e0\3\2\2\2*\u00e5\3\2\2\2,\u00eb\3\2\2\2.\u00f3\3\2\2\2\60"+
+		"\61\5\4\3\2\61\62\7\2\2\3\62\3\3\2\2\2\63\65\5\6\4\2\64\63\3\2\2\2\65"+
+		"8\3\2\2\2\66\64\3\2\2\2\66\67\3\2\2\2\67\5\3\2\2\28\66\3\2\2\29F\5\32"+
+		"\16\2:F\5\"\22\2;F\5\22\n\2<F\5\24\13\2=F\5&\24\2>F\5(\25\2?F\5*\26\2"+
+		"@F\5,\27\2AF\5.\30\2BF\5\n\6\2CF\5\f\7\2DF\5\b\5\2E9\3\2\2\2E:\3\2\2\2"+
+		"E;\3\2\2\2E<\3\2\2\2E=\3\2\2\2E>\3\2\2\2E?\3\2\2\2E@\3\2\2\2EA\3\2\2\2"+
+		"EB\3\2\2\2EC\3\2\2\2ED\3\2\2\2F\7\3\2\2\2GH\5\26\f\2HI\7\3\2\2IJ\7#\2"+
+		"\2JK\7\32\2\2K\t\3\2\2\2LN\7#\2\2MO\5\20\t\2NM\3\2\2\2NO\3\2\2\2OP\3\2"+
+		"\2\2PQ\7\32\2\2Q\13\3\2\2\2RS\7#\2\2SU\7#\2\2TV\5\20\t\2UT\3\2\2\2UV\3"+
+		"\2\2\2VW\3\2\2\2WX\7\32\2\2X\r\3\2\2\2YZ\7#\2\2Z[\7\35\2\2[\\\7#\2\2\\"+
+		"\17\3\2\2\2]^\7\21\2\2^d\5\26\f\2_`\7\25\2\2`a\7\21\2\2ac\5\26\f\2b_\3"+
+		"\2\2\2cf\3\2\2\2db\3\2\2\2de\3\2\2\2en\3\2\2\2fd\3\2\2\2gh\7\25\2\2hi"+
+		"\7\21\2\2ij\7#\2\2jk\7\34\2\2km\5\26\f\2lg\3\2\2\2mp\3\2\2\2nl\3\2\2\2"+
+		"no\3\2\2\2o\u0080\3\2\2\2pn\3\2\2\2qr\7\21\2\2rs\7#\2\2st\7\34\2\2t|\5"+
+		"\26\f\2uv\7\25\2\2vw\7\21\2\2wx\7#\2\2xy\7\34\2\2y{\5\26\f\2zu\3\2\2\2"+
+		"{~\3\2\2\2|z\3\2\2\2|}\3\2\2\2}\u0080\3\2\2\2~|\3\2\2\2\177]\3\2\2\2\177"+
+		"q\3\2\2\2\u0080\21\3\2\2\2\u0081\u0082\7#\2\2\u0082\u0083\7\27\2\2\u0083"+
 		"\u0084\5\26\f\2\u0084\u0085\7\6\2\2\u0085\u0086\7\32\2\2\u0086\23\3\2"+
 		"\2\2\u0087\u0088\7#\2\2\u0088\u0089\7\24\2\2\u0089\u008a\5\26\f\2\u008a"+
 		"\u008b\7\6\2\2\u008b\u008c\7\32\2\2\u008c\25\3\2\2\2\u008d\u008e\b\f\1"+
@@ -1839,16 +1848,16 @@ public class KharazmiParser extends Parser {
 		"\u00ce\u00d0\7#\2\2\u00cf\u00cd\3\2\2\2\u00d0\u00d3\3\2\2\2\u00d1\u00cf"+
 		"\3\2\2\2\u00d1\u00d2\3\2\2\2\u00d2%\3\2\2\2\u00d3\u00d1\3\2\2\2\u00d4"+
 		"\u00d5\7\13\2\2\u00d5\u00d6\5\26\f\2\u00d6\u00d7\7\b\2\2\u00d7\u00d8\7"+
-		"\34\2\2\u00d8\u00db\5\4\3\2\u00d9\u00da\7\f\2\2\u00da\u00dc\5\4\3\2\u00db"+
-		"\u00d9\3\2\2\2\u00db\u00dc\3\2\2\2\u00dc\u00dd\3\2\2\2\u00dd\u00de\7\23"+
-		"\2\2\u00de\'\3\2\2\2\u00df\u00e0\7\r\2\2\u00e0\u00e1\5\26\f\2\u00e1\u00e2"+
-		"\5\4\3\2\u00e2\u00e3\7\23\2\2\u00e3)\3\2\2\2\u00e4\u00e5\5\26\f\2\u00e5"+
-		"\u00e6\7\"\2\2\u00e6\u00e7\7\34\2\2\u00e7\u00e8\5\4\3\2\u00e8\u00e9\7"+
-		"\23\2\2\u00e9+\3\2\2\2\u00ea\u00eb\7\16\2\2\u00eb\u00ec\7#\2\2\u00ec\u00ed"+
-		"\7\17\2\2\u00ed\u00ee\5\26\f\2\u00ee\u00ef\7\34\2\2\u00ef\u00f0\5\4\3"+
-		"\2\u00f0\u00f1\7\23\2\2\u00f1-\3\2\2\2\u00f2\u00f3\7\22\2\2\u00f3\u00f4"+
-		"\7#\2\2\u00f4\u00f5\7\32\2\2\u00f5/\3\2\2\2\22\66ENUdn|\177\u0098\u00a0"+
-		"\u00ab\u00b2\u00bc\u00c6\u00d1\u00db";
+		"\34\2\2\u00d8\u00dc\5\4\3\2\u00d9\u00da\7\f\2\2\u00da\u00db\7\34\2\2\u00db"+
+		"\u00dd\5\4\3\2\u00dc\u00d9\3\2\2\2\u00dc\u00dd\3\2\2\2\u00dd\u00de\3\2"+
+		"\2\2\u00de\u00df\7\23\2\2\u00df\'\3\2\2\2\u00e0\u00e1\7\r\2\2\u00e1\u00e2"+
+		"\5\26\f\2\u00e2\u00e3\5\4\3\2\u00e3\u00e4\7\23\2\2\u00e4)\3\2\2\2\u00e5"+
+		"\u00e6\5\26\f\2\u00e6\u00e7\7\"\2\2\u00e7\u00e8\7\34\2\2\u00e8\u00e9\5"+
+		"\4\3\2\u00e9\u00ea\7\23\2\2\u00ea+\3\2\2\2\u00eb\u00ec\7\16\2\2\u00ec"+
+		"\u00ed\7#\2\2\u00ed\u00ee\7\17\2\2\u00ee\u00ef\5\26\f\2\u00ef\u00f0\7"+
+		"\34\2\2\u00f0\u00f1\5\4\3\2\u00f1\u00f2\7\23\2\2\u00f2-\3\2\2\2\u00f3"+
+		"\u00f4\7\22\2\2\u00f4\u00f5\7#\2\2\u00f5\u00f6\7\32\2\2\u00f6/\3\2\2\2"+
+		"\22\66ENUdn|\177\u0098\u00a0\u00ab\u00b2\u00bc\u00c6\u00d1\u00dc";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

@@ -1,4 +1,4 @@
-// Generated from /Users/Bardia/IdeaProjects/compiler/grammer/Kharazmi.g4 by ANTLR 4.6
+// Generated from /Users/Bardia/IdeaProjects/compiler/grammer/Kharazmi.g4 by ANTLR 4.7
 package parser;
 import org.antlr.v4.runtime.tree.AbstractParseTreeVisitor;
 
