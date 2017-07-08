@@ -15,7 +15,8 @@ kharazmi.iml
 *.class
 
 # Package Files #
-*.jar
+/Scrawlout.jar
+*.j
 *.war
 *.ear
 
