@@ -11,7 +11,6 @@
 .source Test.java
 .class public Test
 .super java/lang/Object
-.inner class somthing inner Test$1somthing ; <not a member>
 
 .method public <init>()V
   .limit stack 1
@@ -23,19 +22,17 @@
 .end method
 
 .method public static main([Ljava/lang/String;)V
-  .limit stack 3
+  .limit stack 2
   .limit locals 2
-  .line 13
-  0: ldc "salam"
-  2: astore_1
-  .line 14
-  3: new Test$1somthing
-  6: dup
-  7: aload_1
-  8: invokespecial Test$1somthing/<init>(Ljava/lang/String;)V
-  11: pop
-  .line 16
-  12: return
+  .line 20
+  0: bipush 35
+  2: istore_1
+  .line 21
+  3: getstatic java/lang/System/out Ljava/io/PrintStream;
+  6: iload_1
+  7: invokevirtual java/io/PrintStream/println(I)V
+  .line 23
+  10: return
 .end method
 
 

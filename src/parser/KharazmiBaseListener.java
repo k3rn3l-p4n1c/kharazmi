@@ -148,13 +148,37 @@ public class KharazmiBaseListener implements KharazmiListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterOperand(KharazmiParser.OperandContext ctx) { }
+	@Override public void enterTerm(KharazmiParser.TermContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitOperand(KharazmiParser.OperandContext ctx) { }
+	@Override public void exitTerm(KharazmiParser.TermContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterFactor(KharazmiParser.FactorContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitFactor(KharazmiParser.FactorContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterBool_operand(KharazmiParser.Bool_operandContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitBool_operand(KharazmiParser.Bool_operandContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

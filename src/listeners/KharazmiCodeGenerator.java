@@ -53,6 +53,11 @@ public class KharazmiCodeGenerator implements KharazmiListener {
         return nextVarId++;
     }
 
+    private int nextLabelNumber = 1;
+    private String newLabel(){
+        return "L" + (nextLabelNumber++) + ":";
+    }
+
     @Override
     public void enterProg(KharazmiParser.ProgContext ctx) {
         bytecode += KharazmiHelperFunctions.JasminPrefix();
@@ -91,7 +96,7 @@ public class KharazmiCodeGenerator implements KharazmiListener {
     @Override
     public void exitSubjectiveFunctionCall(KharazmiParser.SubjectiveFunctionCallContext ctx) {
         if (ctx.ID().getText().equals("چاپکن")){
-            bytecode += KharazmiHelperFunctions.PrintFunctionCall(ctx.expr());
+            bytecode += KharazmiHelperFunctions.PrintFunctionCall(ctx.expr(), symbolTable);
         }else{
             // TODO: call function ctx.ID()
         }
@@ -151,10 +156,17 @@ public class KharazmiCodeGenerator implements KharazmiListener {
                 throw new RuntimeException(variable_name + " except " + symbolTable.get(variable_name) + " but it got " + variable_type);
             }
         } else {
-            symbolTable.put(variable_name, new SymbolContext(variable_type, variable_name, false, newVarId()));
-            // TODO pop push
+            int id = newVarId();
+            symbolTable.put(variable_name, new SymbolContext(variable_type, variable_name, false, id));
+            if (ctx.expr().isID)
+                bytecode += "iload "+ symbolTable.get((String) ctx.expr().value) +"\n" +
+                            "istore "+id+"\n";
+            else
+                bytecode += "bipush "+ ctx.expr().value +"\n" +
+                            "istore "+id+"\n";
         }
     }
+
     @Override
     public void enterInstanceDefinition(KharazmiParser.InstanceDefinitionContext ctx) {
 
@@ -172,41 +184,185 @@ public class KharazmiCodeGenerator implements KharazmiListener {
 
     @Override
     public void exitExpr(KharazmiParser.ExprContext ctx) {
-        if (ctx.ID() != null) {
-            if (symbolTable.containsKey(ctx.ID().getText())) {
-                ctx.type = symbolTable.get(ctx.ID().getText()).type;
-                ctx.isTemp = true;
-                // TODO print temp statement
+        if (ctx.ADD() != null) {
+            if (ctx.term().type.equals(ctx.expr(0).type) && ctx.term().type.equals("int")) {
+                if (ctx.expr(0).isID) {
+                    if (ctx.term().isID) {
+                        bytecode += "iload " + symbolTable.get((String) ctx.expr(0).value).varId + "\n" +
+                                "iload " + symbolTable.get((String) ctx.term().value).varId + "\n" +
+                                "iadd\n";
+                    } else {
+                        bytecode += "iload " + symbolTable.get((String) ctx.expr(0).value).varId + "\n" +
+                                "bipush " + ctx.term().value + "\n" +
+                                "iadd\n";
+                    }
+                } else if (ctx.term().isID) {
+                    bytecode += "bipush " + ctx.expr(0).value + "\n" +
+                            "iload " + symbolTable.get((String) ctx.term().value).varId + "\n" +
+                            "iadd\n";
+                } else {
+                    bytecode += "bipush " + ctx.expr(0).value + "\n" +
+                            "bipush " + ctx.term().value + "\n" +
+                            "iadd\n";
+                }
+                int id = newTemp();
+                ctx.isID = true;
+                String variable_name = "#" + id;
+                symbolTable.put(variable_name, new SymbolContext("int", variable_name, true, id));
+                bytecode += "istore " + id + "\n";
             } else {
-                throw new RuntimeException(ctx.ID().getText() + "is used before assignment");
+                throw new RuntimeException("Can not apply operand " + ctx.ADD().getText() + " between " + ctx.expr(0).type + " and " + ctx.term().type);
             }
-        } else if (ctx.STRING() != null) {
-            ctx.type = "str";
-            ctx.isTemp = false;
-            ctx.value = ctx.STRING();
-        } else if (ctx.NUMBER() != null) {
-            ctx.type = "int";
-            ctx.isTemp = false;
-            ctx.value = KharazmiHelperFunctions.ToEnglishNumber(ctx.NUMBER().getText());
-        } else if (ctx.operand() != null) {
-            System.out.println(ctx.expr(0).type);
-            if (ctx.expr(0).type.equals(ctx.expr(1).type)) {
-                ctx.type = ctx.expr(0).type;
-                // TODO print temp statement
+        } else if (ctx.SUB() != null) {
+            if (ctx.term().type.equals(ctx.expr(0).type) && ctx.term().type.equals("int")) {
+                if (ctx.expr(0).isID) {
+                    if (ctx.term().isID) {
+                        bytecode += "iload " + symbolTable.get((String) ctx.expr(0).value).varId + "\n" +
+                                "iload " + symbolTable.get((String) ctx.term().value).varId + "\n" +
+                                "isub\n";
+                    } else {
+                        bytecode += "iload " + symbolTable.get((String) ctx.expr(0).value).varId + "\n" +
+                                "bipush " + ctx.term().value + "\n" +
+                                "isub\n";
+                    }
+                } else if (ctx.term().isID) {
+                    bytecode += "bipush " + ctx.expr(0).value + "\n" +
+                            "iload " + symbolTable.get((String) ctx.term().value).varId + "\n" +
+                            "isub\n";
+                } else {
+                    bytecode += "bipush " + ctx.expr(0).value + "\n" +
+                            "bipush " + ctx.term().value + "\n" +
+                            "isub\n";
+                }
+                int id = newTemp();
+                ctx.isID = true;
+                String variable_name = "#" + id;
+                symbolTable.put(variable_name, new SymbolContext("int", variable_name, true, id));
+                bytecode += "istore " + id + "\n";
             } else {
-                throw new RuntimeException("Can not apply operand " + ctx.operand().getText() + " between "+ctx.expr(0).type + " and "+ctx.expr(1).type);
+                throw new RuntimeException("Can not apply operand " + ctx.SUB().getText() + " between " + ctx.expr(0).type + " and " + ctx.term().type);
             }
+        }else if (ctx.bool_operand() != null){
+            // TODO
+        }else if (ctx.term() != null){
+            ctx.type = ctx.term().type;
+            ctx.isID = ctx.term().isID;
+            ctx.value = ctx.term().value;
+        }else{
+            // TODO
         }
 
     }
 
     @Override
-    public void enterOperand(KharazmiParser.OperandContext ctx) {
+    public void enterTerm(KharazmiParser.TermContext ctx) {
 
     }
 
     @Override
-    public void exitOperand(KharazmiParser.OperandContext ctx) {
+    public void exitTerm(KharazmiParser.TermContext ctx) {
+        if (ctx.MUL() != null) {
+            if (ctx.term().type.equals(ctx.factor().type) && ctx.term().type.equals("int")) {
+                if (ctx.term().isID){
+                    if (ctx.factor().isID){
+                        bytecode += "iload "+symbolTable.get((String) ctx.term().value).varId+"\n" +
+                                    "iload "+symbolTable.get((String) ctx.factor().value).varId+"\n" +
+                                    "imul\n";
+                    }else{
+                        bytecode += "iload "+symbolTable.get((String) ctx.term().value).varId+"\n" +
+                                    "bipush "+ctx.factor().value+"\n" +
+                                    "imul\n";
+                    }
+                }else if (ctx.factor().isID){
+                    bytecode += "bipush "+ctx.term().value+"\n" +
+                                "iload "+symbolTable.get((String) ctx.factor().value).varId+"\n" +
+                                "imul\n";
+                }else{
+                    bytecode += "bipush "+ctx.term().value+"\n" +
+                                "bipush "+ctx.factor().value+"\n" +
+                                "imul\n";
+                }
+                int id = newTemp();
+                ctx.isID = true;
+                String variable_name = "#"+id;
+                symbolTable.put(variable_name, new SymbolContext("int", variable_name, true, id));
+                bytecode += "istore "+id+"\n";
+            } else {
+                throw new RuntimeException("Can not apply operand " + ctx.MUL().getText() + " between "+ctx.term().type + " and "+ctx.factor().type);
+            }
+        } else if (ctx.DIV() != null) {
+            if (ctx.term().type.equals(ctx.factor().type) && ctx.term().type.equals("int")) {
+                if (ctx.term().isID){
+                    if (ctx.factor().isID){
+                        bytecode += "iload "+symbolTable.get((String) ctx.term().value).varId+"\n" +
+                                "iload "+symbolTable.get((String) ctx.factor().value).varId+"\n" +
+                                "idiv\n";
+                    }else{
+                        bytecode += "iload "+symbolTable.get((String) ctx.term().value).varId+"\n" +
+                                "bipush "+ctx.factor().value+"\n" +
+                                "idiv\n";
+                    }
+                }else if (ctx.factor().isID){
+                    bytecode += "bipush "+ctx.term().value+"\n" +
+                            "iload "+symbolTable.get((String) ctx.factor().value).varId+"\n" +
+                            "idiv\n";
+                }else{
+                    bytecode += "bipush "+ctx.term().value+"\n" +
+                            "bipush "+ctx.factor().value+"\n" +
+                            "idiv\n";
+                }
+                int id = newTemp();
+                ctx.isID = true;
+                String variable_name = "#"+id;
+                symbolTable.put(variable_name, new SymbolContext("int", variable_name, true, id));
+                bytecode += "istore "+id+"\n";
+            } else {
+                throw new RuntimeException("Can not apply operand " + ctx.DIV().getText() + " between "+ctx.term().type + " and "+ctx.factor().type);
+            }
+        }else{
+            ctx.type = ctx.factor().type;
+            ctx.isID = ctx.factor().isID;
+            ctx.value = ctx.factor().value;
+        }
+    }
+
+    @Override
+    public void enterFactor(KharazmiParser.FactorContext ctx) {
+
+    }
+
+    @Override
+    public void exitFactor(KharazmiParser.FactorContext ctx) {
+        if (ctx.ID() != null) {
+            if (symbolTable.containsKey(ctx.ID().getText())) {
+                ctx.type = symbolTable.get(ctx.ID().getText()).type;
+                ctx.isID = true;
+                ctx.value = ctx.ID().getText();
+            } else {
+                throw new RuntimeException(ctx.ID().getText() + "is used before assignment");
+            }
+        } else if (ctx.STRING() != null) {
+            ctx.type = "str";
+            ctx.isID = false;
+            ctx.value = ctx.STRING().getText().substring(1, ctx.getText().length()-1);
+        } else if (ctx.NUMBER() != null) {
+            ctx.type = "int";
+            ctx.isID = false;
+            ctx.value = KharazmiHelperFunctions.ToEnglishNumber(ctx.NUMBER().getText());
+        }else{
+            ctx.type = ctx.expr().type;
+            ctx.isID = ctx.expr().isID;
+            ctx.value = ctx.expr().value;
+        }
+    }
+
+    @Override
+    public void enterBool_operand(KharazmiParser.Bool_operandContext ctx) {
+
+    }
+
+    @Override
+    public void exitBool_operand(KharazmiParser.Bool_operandContext ctx) {
 
     }
 

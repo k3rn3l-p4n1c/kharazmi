@@ -24,7 +24,9 @@ import jasmin.Main;
 public class Kharazmi {
 
     public static void main(String[] args) throws IOException {
-        String fileName = "samples/1_print.kh";
+//        String fileName = "samples/1_print.kh";
+        String fileName = "samples/2_variable.kh";
+//        String fileName = "samples/3_expresion.kh";
         File file = new File(fileName);
         FileInputStream fis = null;
 

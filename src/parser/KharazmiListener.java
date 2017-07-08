@@ -118,15 +118,35 @@ public interface KharazmiListener extends ParseTreeListener {
 	 */
 	void exitExpr(KharazmiParser.ExprContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link KharazmiParser#operand}.
+	 * Enter a parse tree produced by {@link KharazmiParser#term}.
 	 * @param ctx the parse tree
 	 */
-	void enterOperand(KharazmiParser.OperandContext ctx);
+	void enterTerm(KharazmiParser.TermContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link KharazmiParser#operand}.
+	 * Exit a parse tree produced by {@link KharazmiParser#term}.
 	 * @param ctx the parse tree
 	 */
-	void exitOperand(KharazmiParser.OperandContext ctx);
+	void exitTerm(KharazmiParser.TermContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link KharazmiParser#factor}.
+	 * @param ctx the parse tree
+	 */
+	void enterFactor(KharazmiParser.FactorContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link KharazmiParser#factor}.
+	 * @param ctx the parse tree
+	 */
+	void exitFactor(KharazmiParser.FactorContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link KharazmiParser#bool_operand}.
+	 * @param ctx the parse tree
+	 */
+	void enterBool_operand(KharazmiParser.Bool_operandContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link KharazmiParser#bool_operand}.
+	 * @param ctx the parse tree
+	 */
+	void exitBool_operand(KharazmiParser.Bool_operandContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link KharazmiParser#classDefinition}.
 	 * @param ctx the parse tree

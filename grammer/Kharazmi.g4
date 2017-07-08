@@ -48,27 +48,27 @@ instanceDefinition:
     ID NEW expr POSTFIX_DEFINE DOT
     ;
 
-expr returns[String type, Object value, boolean isTemp]:
+expr returns[String type, Object value, boolean isID]:
     functionCall
     | getAttr
     | methodCall
     | expr ADD term
-    | expr MIN term;
+    | expr SUB term
+    | expr bool_operand expr
+    | term;
 
-term:
+term returns[String type, Object value, boolean isID]:
     term MUL factor
-    | term SUB factor
+    | term DIV factor
     | factor;
 
-factor:
+factor returns[String type, Object value, boolean isID]:
     ID
     | NUMBER
     | STRING
-    '(' expr ')';
+    | '(' expr ')';
 
-operand: ADD | MIN | MUL | SUB |
-            OR | AND |
-            GT | LT | EQUAL;
+bool_operand: OR | AND | GT | LT | EQUAL;
 
 classDefinition:
     CLASS ID COLON (classStatement)* END
@@ -144,10 +144,10 @@ COLON: ':';
 KASRE: 'ِ';
 
 // operands
-ADD: '+';
-MIN: '-';
-MUL: '*';
-SUB: '/';
+ADD: 'به علاوه' | '+';
+SUB: 'منهای' | 'منها ی';
+MUL: 'ضربدر' | 'ضرب در' | '*';
+DIV: 'تقسیم بر' | 'بخش بر';
 
 REPEAT: 'بار';
 
