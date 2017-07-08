@@ -155,11 +155,12 @@ public class KharazmiCodeGenerator implements KharazmiListener {
             if (!symbolTable.get(variable_name).equals(variable_type)) {
                 throw new RuntimeException(variable_name + " except " + symbolTable.get(variable_name) + " but it got " + variable_type);
             }
+
         } else {
             int id = newVarId();
             symbolTable.put(variable_name, new SymbolContext(variable_type, variable_name, false, id));
             if (ctx.expr().isID)
-                bytecode += "iload "+ symbolTable.get((String) ctx.expr().value) +"\n" +
+                bytecode += "iload "+ symbolTable.get((String) ctx.expr().value).varId +"\n" +
                             "istore "+id+"\n";
             else
                 bytecode += "bipush "+ ctx.expr().value +"\n" +
@@ -210,6 +211,8 @@ public class KharazmiCodeGenerator implements KharazmiListener {
                 String variable_name = "#" + id;
                 symbolTable.put(variable_name, new SymbolContext("int", variable_name, true, id));
                 bytecode += "istore " + id + "\n";
+                ctx.type = "int";
+                ctx.value = variable_name;
             } else {
                 throw new RuntimeException("Can not apply operand " + ctx.ADD().getText() + " between " + ctx.expr(0).type + " and " + ctx.term().type);
             }
@@ -239,6 +242,8 @@ public class KharazmiCodeGenerator implements KharazmiListener {
                 String variable_name = "#" + id;
                 symbolTable.put(variable_name, new SymbolContext("int", variable_name, true, id));
                 bytecode += "istore " + id + "\n";
+                ctx.type = "int";
+                ctx.value = variable_name;
             } else {
                 throw new RuntimeException("Can not apply operand " + ctx.SUB().getText() + " between " + ctx.expr(0).type + " and " + ctx.term().type);
             }
@@ -287,6 +292,8 @@ public class KharazmiCodeGenerator implements KharazmiListener {
                 String variable_name = "#"+id;
                 symbolTable.put(variable_name, new SymbolContext("int", variable_name, true, id));
                 bytecode += "istore "+id+"\n";
+                ctx.type = "int";
+                ctx.value = variable_name;
             } else {
                 throw new RuntimeException("Can not apply operand " + ctx.MUL().getText() + " between "+ctx.term().type + " and "+ctx.factor().type);
             }
@@ -316,6 +323,8 @@ public class KharazmiCodeGenerator implements KharazmiListener {
                 String variable_name = "#"+id;
                 symbolTable.put(variable_name, new SymbolContext("int", variable_name, true, id));
                 bytecode += "istore "+id+"\n";
+                ctx.type = "int";
+                ctx.value = variable_name;
             } else {
                 throw new RuntimeException("Can not apply operand " + ctx.DIV().getText() + " between "+ctx.term().type + " and "+ctx.factor().type);
             }
