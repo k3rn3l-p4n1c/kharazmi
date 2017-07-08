@@ -26,3 +26,5 @@ src/*.tokens
 # temperory
 gen/
 .DS_Store
+/antlr-4.7-complete.jar
+/KharazmiProgram.jar

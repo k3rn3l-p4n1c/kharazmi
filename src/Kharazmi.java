@@ -22,6 +22,7 @@ import jasmin.Main;
  * Created by Bardia on 3/10/17.
  */
 public class Kharazmi {
+
     public static void main(String[] args) throws IOException {
         String fileName = "samples/1_print.kh";
         File file = new File(fileName);
@@ -51,31 +52,21 @@ public class Kharazmi {
         // Close the input file
         fis.close();
 
-        // Create a generic parse tree walker that can trigger callbacks
         ParseTreeWalker walker = new ParseTreeWalker();
-        // Walk the tree created during the parse, trigger callbacks
         walker.walk(new KharazmiBaseListener(), tree);
-//            System.out.println(); // print a \n after translation
+        KharazmiCodeGenerator kharazmiCodeGenerator = new KharazmiCodeGenerator();
+        walker.walk(kharazmiCodeGenerator, tree);
 
-        // Walk the tree again to translate to java
-        walker.walk(new KharazmiCodeGenerator(), tree);
-//        walker.walk(new KharazmiVariable(), tree);
 
-        // PrintFunctionCall LISP-style tree
-//            System.out.println(tree.toStringTree(parser));
-//        } catch (IOException e) {
-//            // TODO Auto-generated catch block
-//            e.printStackTrace();
-//        }
 
         String outputName = "temp_jasmin";
-        String bytecode = "";
+
         try {
             URL location = Main.class.getProtectionDomain().getCodeSource().getLocation();
             URL jasmin_path = new URL(location,"../"+outputName+".j");
             System.out.println("Jasmin created in: "+jasmin_path);
             PrintWriter writer = new PrintWriter(jasmin_path.getPath(), "UTF-8");
-            writer.print(bytecode);
+            writer.print(kharazmiCodeGenerator.bytecode);
             writer.close();
 
             (new Main()).assemble(jasmin_path.getPath());
@@ -85,9 +76,9 @@ public class Kharazmi {
 
         Manifest manifest = new Manifest();
         manifest.getMainAttributes().put(Attributes.Name.MANIFEST_VERSION, "1.0");
-        manifest.getMainAttributes().put(Attributes.Name.MAIN_CLASS, "Scrawlout");
-        JarOutputStream target = new JarOutputStream(new FileOutputStream("Scrawlout.jar"), manifest);
-        add(new File("Scrawlout.class"), target);
+        manifest.getMainAttributes().put(Attributes.Name.MAIN_CLASS, "KharazmiProgram");
+        JarOutputStream target = new JarOutputStream(new FileOutputStream("KharazmiProgram.jar"), manifest);
+        add(new File("KharazmiProgram.class"), target);
         target.close();
     }
 

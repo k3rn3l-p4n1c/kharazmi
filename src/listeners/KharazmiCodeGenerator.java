@@ -14,6 +14,8 @@ import java.util.HashMap;
  */
 public class KharazmiCodeGenerator implements KharazmiListener {
     HashMap<String, String> symbolTable;
+    public String bytecode = "";
+
 
     public KharazmiCodeGenerator() {
         symbolTable = new HashMap<>();
@@ -21,12 +23,12 @@ public class KharazmiCodeGenerator implements KharazmiListener {
 
     @Override
     public void enterProg(KharazmiParser.ProgContext ctx) {
-
+        bytecode += KharazmiHelperFunctions.JasminPrefix();
     }
 
     @Override
     public void exitProg(KharazmiParser.ProgContext ctx) {
-
+        bytecode += KharazmiHelperFunctions.JasminPostfix();
     }
 
     @Override
@@ -57,7 +59,7 @@ public class KharazmiCodeGenerator implements KharazmiListener {
     @Override
     public void exitSubjectiveFunctionCall(KharazmiParser.SubjectiveFunctionCallContext ctx) {
         if (ctx.ID().getText().equals("چاپکن")){
-            KharazmiHelperFunctions.PrintFunctionCall(ctx.expr());
+            bytecode += KharazmiHelperFunctions.PrintFunctionCall(ctx.expr());
         }else{
             // TODO: call function ctx.ID()
         }
