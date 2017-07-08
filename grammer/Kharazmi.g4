@@ -48,16 +48,23 @@ instanceDefinition:
     ID NEW expr POSTFIX_DEFINE DOT
     ;
 
-expr returns[String type, Object value]:
-      ID
-    | NUMBER
-    | STRING
-    | functionCall
+expr returns[String type, Object value, boolean isTemp]:
+    functionCall
     | getAttr
     | methodCall
-    | expr operand expr
-    | '(' expr ')'
-    ;
+    | expr ADD term
+    | expr MIN term;
+
+term:
+    term MUL factor
+    | term SUB factor
+    | factor;
+
+factor:
+    ID
+    | NUMBER
+    | STRING
+    '(' expr ')';
 
 operand: ADD | MIN | MUL | SUB |
             OR | AND |

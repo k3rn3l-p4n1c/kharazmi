@@ -7,18 +7,50 @@ import parser.KharazmiListener;
 import parser.KharazmiParser;
 
 import java.util.HashMap;
+import java.util.HashSet;
 
 
 /**
  * Created by Bardia on 3/10/17.
  */
 public class KharazmiCodeGenerator implements KharazmiListener {
-    HashMap<String, String> symbolTable;
+
+    class SymbolContext{
+        public String type;
+        public String name;
+        public boolean isTemp;
+        public int varId;
+        public SymbolContext(String type, String name, boolean isTemp, int varId){
+            this.type = type;
+            this.name = name;
+            this.isTemp = isTemp;
+            this.varId = varId;
+        }
+    }
+
+    HashMap<String, SymbolContext> symbolTable;
     public String bytecode = "";
 
 
     public KharazmiCodeGenerator() {
         symbolTable = new HashMap<>();
+        tempSet = new HashSet<>();
+    }
+
+    HashSet<Integer> tempSet;
+    private boolean isTemp(int id){
+        return tempSet.contains(id);
+    }
+
+    private int newTemp(){
+        int id = newVarId();
+        tempSet.contains(id);
+        return id;
+    }
+
+    private int nextVarId = 1;
+    private int newVarId(){
+        return nextVarId++;
     }
 
     @Override
@@ -118,10 +150,11 @@ public class KharazmiCodeGenerator implements KharazmiListener {
             if (!symbolTable.get(variable_name).equals(variable_type)) {
                 throw new RuntimeException(variable_name + " except " + symbolTable.get(variable_name) + " but it got " + variable_type);
             }
-        } else
-            symbolTable.put(variable_name, variable_type);
+        } else {
+            symbolTable.put(variable_name, new SymbolContext(variable_type, variable_name, false, newVarId()));
+            // TODO pop push
+        }
     }
-
     @Override
     public void enterInstanceDefinition(KharazmiParser.InstanceDefinitionContext ctx) {
 
@@ -141,14 +174,20 @@ public class KharazmiCodeGenerator implements KharazmiListener {
     public void exitExpr(KharazmiParser.ExprContext ctx) {
         if (ctx.ID() != null) {
             if (symbolTable.containsKey(ctx.ID().getText())) {
-                ctx.type = symbolTable.get(ctx.ID().getText());
+                ctx.type = symbolTable.get(ctx.ID().getText()).type;
+                ctx.isTemp = true;
+                // TODO print temp statement
             } else {
                 throw new RuntimeException(ctx.ID().getText() + "is used before assignment");
             }
         } else if (ctx.STRING() != null) {
             ctx.type = "str";
+            ctx.isTemp = false;
+            ctx.value = ctx.STRING();
         } else if (ctx.NUMBER() != null) {
             ctx.type = "int";
+            ctx.isTemp = false;
+            ctx.value = KharazmiHelperFunctions.ToEnglishNumber(ctx.NUMBER().getText());
         } else if (ctx.operand() != null) {
             System.out.println(ctx.expr(0).type);
             if (ctx.expr(0).type.equals(ctx.expr(1).type)) {
@@ -158,6 +197,7 @@ public class KharazmiCodeGenerator implements KharazmiListener {
                 throw new RuntimeException("Can not apply operand " + ctx.operand().getText() + " between "+ctx.expr(0).type + " and "+ctx.expr(1).type);
             }
         }
+
     }
 
     @Override
