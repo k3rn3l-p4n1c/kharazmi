@@ -21,11 +21,12 @@ statement:
     ;
 
 subjectiveFunctionCall:
-    expr 'را' ID DOT;
+    expr 'را' ID DOT
+    | expr 'را' PRINT_FUNCTION DOT;
 
 functionCall:
     ID (arguments)? DOT
-    ;
+    | PRINT_FUNCTION (arguments)? DOT;
 
 methodCall:
     ID ID (arguments)? DOT
@@ -150,6 +151,7 @@ MUL: 'ضربدر' | 'ضرب در' | '*';
 DIV: 'تقسیم بر' | 'بخش بر';
 
 REPEAT: 'بار';
+PRINT_FUNCTION: 'چاپکن' | 'چاپ کن';
 
 // identifires
 ID: ('\u0620'..'\u06EF')('\u0620'..'\u06FF' | '‌' | '0'..'9')*;

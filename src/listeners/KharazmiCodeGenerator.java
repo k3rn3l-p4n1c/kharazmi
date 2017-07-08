@@ -3,6 +3,7 @@ package listeners;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
+import parser.KharazmiLexer;
 import parser.KharazmiListener;
 import parser.KharazmiParser;
 
@@ -95,7 +96,7 @@ public class KharazmiCodeGenerator implements KharazmiListener {
 
     @Override
     public void exitSubjectiveFunctionCall(KharazmiParser.SubjectiveFunctionCallContext ctx) {
-        if (ctx.ID().getText().equals("چاپکن")){
+        if (ctx.PRINT_FUNCTION() != null){
             bytecode += KharazmiHelperFunctions.PrintFunctionCall(ctx.expr(), symbolTable);
         }else{
             // TODO: call function ctx.ID()
