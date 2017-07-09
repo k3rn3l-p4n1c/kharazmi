@@ -187,23 +187,23 @@ public class KharazmiCodeGenerator implements KharazmiListener {
     @Override
     public void exitExpr(KharazmiParser.ExprContext ctx) {
         if (ctx.ADD() != null) {
-            if (ctx.term().type.equals(ctx.expr(0).type) && ctx.term().type.equals("int")) {
-                if (ctx.expr(0).isID) {
+            if (ctx.term().type.equals(ctx.expr().type) && ctx.term().type.equals("int")) {
+                if (ctx.expr().isID) {
                     if (ctx.term().isID) {
-                        bytecode += "iload " + symbolTable.get((String) ctx.expr(0).value).varId + "\n" +
+                        bytecode += "iload " + symbolTable.get((String) ctx.expr().value).varId + "\n" +
                                 "iload " + symbolTable.get((String) ctx.term().value).varId + "\n" +
                                 "iadd\n";
                     } else {
-                        bytecode += "iload " + symbolTable.get((String) ctx.expr(0).value).varId + "\n" +
+                        bytecode += "iload " + symbolTable.get((String) ctx.expr().value).varId + "\n" +
                                 "bipush " + ctx.term().value + "\n" +
                                 "iadd\n";
                     }
                 } else if (ctx.term().isID) {
-                    bytecode += "bipush " + ctx.expr(0).value + "\n" +
+                    bytecode += "bipush " + ctx.expr().value + "\n" +
                             "iload " + symbolTable.get((String) ctx.term().value).varId + "\n" +
                             "iadd\n";
                 } else {
-                    bytecode += "bipush " + ctx.expr(0).value + "\n" +
+                    bytecode += "bipush " + ctx.expr().value + "\n" +
                             "bipush " + ctx.term().value + "\n" +
                             "iadd\n";
                 }
@@ -215,26 +215,26 @@ public class KharazmiCodeGenerator implements KharazmiListener {
                 ctx.type = "int";
                 ctx.value = variable_name;
             } else {
-                throw new RuntimeException("Can not apply operand " + ctx.ADD().getText() + " between " + ctx.expr(0).type + " and " + ctx.term().type);
+                throw new RuntimeException("Can not apply operand " + ctx.ADD().getText() + " between " + ctx.expr().type + " and " + ctx.term().type);
             }
         } else if (ctx.SUB() != null) {
-            if (ctx.term().type.equals(ctx.expr(0).type) && ctx.term().type.equals("int")) {
-                if (ctx.expr(0).isID) {
+            if (ctx.term().type.equals(ctx.expr().type) && ctx.term().type.equals("int")) {
+                if (ctx.expr().isID) {
                     if (ctx.term().isID) {
-                        bytecode += "iload " + symbolTable.get((String) ctx.expr(0).value).varId + "\n" +
+                        bytecode += "iload " + symbolTable.get((String) ctx.expr().value).varId + "\n" +
                                 "iload " + symbolTable.get((String) ctx.term().value).varId + "\n" +
                                 "isub\n";
                     } else {
-                        bytecode += "iload " + symbolTable.get((String) ctx.expr(0).value).varId + "\n" +
+                        bytecode += "iload " + symbolTable.get((String) ctx.expr().value).varId + "\n" +
                                 "bipush " + ctx.term().value + "\n" +
                                 "isub\n";
                     }
                 } else if (ctx.term().isID) {
-                    bytecode += "bipush " + ctx.expr(0).value + "\n" +
+                    bytecode += "bipush " + ctx.expr().value + "\n" +
                             "iload " + symbolTable.get((String) ctx.term().value).varId + "\n" +
                             "isub\n";
                 } else {
-                    bytecode += "bipush " + ctx.expr(0).value + "\n" +
+                    bytecode += "bipush " + ctx.expr().value + "\n" +
                             "bipush " + ctx.term().value + "\n" +
                             "isub\n";
                 }
@@ -246,10 +246,60 @@ public class KharazmiCodeGenerator implements KharazmiListener {
                 ctx.type = "int";
                 ctx.value = variable_name;
             } else {
-                throw new RuntimeException("Can not apply operand " + ctx.SUB().getText() + " between " + ctx.expr(0).type + " and " + ctx.term().type);
+                throw new RuntimeException("Can not apply operand " + ctx.SUB().getText() + " between " + ctx.expr().type + " and " + ctx.term().type);
             }
-        }else if (ctx.bool_operand() != null){
-            // TODO
+        } else if (ctx.compare_operation() != null) {
+            if (ctx.term().type.equals(ctx.expr().type) && ctx.term().type.equals("int")) {
+
+                String l1 = newLabel();
+                String l2 = newLabel();
+
+                if (ctx.expr().isID) {
+                    bytecode += "iload " + symbolTable.get((String) ctx.expr().value).varId + "\n";
+                }else{
+                    bytecode += "bipush " + ctx.expr().value + "\n";
+                }
+
+                if (ctx.term().isID) {
+                    bytecode += "iload " + symbolTable.get((String) ctx.term().value).varId + "\n";
+                }else{
+                    bytecode += "bipush " + ctx.term().value + "\n";
+                }
+
+                if (ctx.compare_operation().GT() != null)
+                    bytecode += "if_icmple "+l1+"\n";
+                else if (ctx.compare_operation().GT_EQUAL() != null)
+                    bytecode += "if_icmplt "+l1+"\n";
+                else if (ctx.compare_operation().LT() != null)
+                    bytecode += "if_icmpge "+l1+"\n";
+                else if (ctx.compare_operation().LT_EQUAL() != null)
+                    bytecode += "if_icmpgt "+l1+"\n";
+                else if (ctx.compare_operation().EQUAL() != null)
+                    bytecode += "if_icmpne "+l1+"\n";
+
+                bytecode += "iconst_1\n";
+                bytecode += "goto " + l2 + "\n";
+                bytecode += l1 + " \n";
+                bytecode += "iconst_0\n";
+                bytecode += l2 + " \n";
+
+                int id = newTemp();
+                ctx.isID = true;
+                String variable_name = "#" + id;
+                symbolTable.put(variable_name, new SymbolContext("int", variable_name, true, id));
+                bytecode += "istore " + id + "\n";
+                ctx.type = "bool";
+                ctx.value = variable_name;
+
+            } else {
+                throw new RuntimeException("Can not apply operand " + ctx.compare_operation().getText() + " between " + ctx.expr().type + " and " + ctx.term().type);
+            }
+        } else if (ctx.OR() != null) {
+            if (ctx.term().type.equals(ctx.expr().type) && ctx.term().type.equals("bool")) {
+
+            } else {
+                throw new RuntimeException("Can not apply operand " + ctx.SUB().getText() + " between " + ctx.expr().type + " and " + ctx.term().type);
+            }
         }else if (ctx.term() != null){
             ctx.type = ctx.term().type;
             ctx.isID = ctx.term().isID;
@@ -359,6 +409,14 @@ public class KharazmiCodeGenerator implements KharazmiListener {
             ctx.type = "int";
             ctx.isID = false;
             ctx.value = KharazmiHelperFunctions.ToEnglishNumber(ctx.NUMBER().getText());
+        } else if (ctx.TRUE() != null) {
+            ctx.type = "bool";
+            ctx.isID = false;
+            ctx.value = "1";
+        } else if (ctx.FALSE() != null) {
+            ctx.type = "bool";
+            ctx.isID = false;
+            ctx.value = "0";
         }else{
             ctx.type = ctx.expr().type;
             ctx.isID = ctx.expr().isID;
@@ -367,12 +425,12 @@ public class KharazmiCodeGenerator implements KharazmiListener {
     }
 
     @Override
-    public void enterBool_operand(KharazmiParser.Bool_operandContext ctx) {
+    public void enterCompare_operation(KharazmiParser.Compare_operationContext ctx) {
 
     }
 
     @Override
-    public void exitBool_operand(KharazmiParser.Bool_operandContext ctx) {
+    public void exitCompare_operation(KharazmiParser.Compare_operationContext ctx) {
 
     }
 

@@ -172,13 +172,13 @@ public class KharazmiBaseListener implements KharazmiListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterBool_operand(KharazmiParser.Bool_operandContext ctx) { }
+	@Override public void enterCompare_operation(KharazmiParser.Compare_operationContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitBool_operand(KharazmiParser.Bool_operandContext ctx) { }
+	@Override public void exitCompare_operation(KharazmiParser.Compare_operationContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

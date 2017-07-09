@@ -108,7 +108,7 @@ public class KharazmiBaseVisitor<T> extends AbstractParseTreeVisitor<T> implemen
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitBool_operand(KharazmiParser.Bool_operandContext ctx) { return visitChildren(ctx); }
+	@Override public T visitCompare_operation(KharazmiParser.Compare_operationContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *

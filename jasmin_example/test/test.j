@@ -23,16 +23,170 @@
 
 .method public static main([Ljava/lang/String;)V
   .limit stack 2
-  .limit locals 2
+  .limit locals 8
+  .line 16
+  0: iconst_2
+  1: istore_1
+  .line 17
+  2: iconst_5
+  3: istore_2
+  .line 18
+  4: iload_1
+  5: iload_2
+  6: if_icmple Label13
+  9: iconst_1
+  10: goto Label14
+Label13:
+  13: iconst_0
+Label14:
+  14: istore_3
+  .line 19
+  15: iload_1
+  16: iload_2
+  17: if_icmplt Label24
+  20: iconst_1
+  21: goto Label25
+Label24:
+  24: iconst_0
+Label25:
+  25: istore 4
   .line 20
-  0: bipush 35
-  2: istore_1
+  27: iload_1
+  28: iload_2
+  29: if_icmpge Label36
+  32: iconst_1
+  33: goto Label37
+Label36:
+  36: iconst_0
+Label37:
+  37: istore 5
   .line 21
-  3: getstatic java/lang/System/out Ljava/io/PrintStream;
-  6: iload_1
-  7: invokevirtual java/io/PrintStream/println(I)V
-  .line 23
-  10: return
+  39: iload_1
+  40: iload_2
+  41: if_icmpgt Label48
+  44: iconst_1
+  45: goto Label49
+Label48:
+  48: iconst_0
+Label49:
+  49: istore 6
+  .line 22
+  51: iload_1
+  52: iload_2
+  53: if_icmpne Label60
+  56: iconst_1
+  57: goto Label61
+Label60:
+  60: iconst_0
+Label61:
+  61: istore 7
+  .line 26
+  63: return
+  ; append_frame (frameNumber = 0)
+  ; frame_type = 253, offset_delta = 13
+  ; frame bytes: 253 0 13 1 1 
+  .stack 
+    offset 13
+    locals Integer
+    locals Integer
+    .end stack
+  ; same_locals_1_stack_item_frame (frameNumber = 1)
+  ; frame_type = 64, offset_delta = 0
+  ; frame bytes: 64 1 
+  .stack 
+    offset 14
+    locals Integer
+    locals Integer
+    stack Integer
+    .end stack
+  ; append_frame (frameNumber = 2)
+  ; frame_type = 252, offset_delta = 9
+  ; frame bytes: 252 0 9 1 
+  .stack 
+    offset 24
+    locals Integer
+    locals Integer
+    locals Integer
+    .end stack
+  ; same_locals_1_stack_item_frame (frameNumber = 3)
+  ; frame_type = 64, offset_delta = 0
+  ; frame bytes: 64 1 
+  .stack 
+    offset 25
+    locals Integer
+    locals Integer
+    locals Integer
+    stack Integer
+    .end stack
+  ; append_frame (frameNumber = 4)
+  ; frame_type = 252, offset_delta = 10
+  ; frame bytes: 252 0 10 1 
+  .stack 
+    offset 36
+    locals Integer
+    locals Integer
+    locals Integer
+    locals Integer
+    .end stack
+  ; same_locals_1_stack_item_frame (frameNumber = 5)
+  ; frame_type = 64, offset_delta = 0
+  ; frame bytes: 64 1 
+  .stack 
+    offset 37
+    locals Integer
+    locals Integer
+    locals Integer
+    locals Integer
+    stack Integer
+    .end stack
+  ; append_frame (frameNumber = 6)
+  ; frame_type = 252, offset_delta = 10
+  ; frame bytes: 252 0 10 1 
+  .stack 
+    offset 48
+    locals Integer
+    locals Integer
+    locals Integer
+    locals Integer
+    locals Integer
+    .end stack
+  ; same_locals_1_stack_item_frame (frameNumber = 7)
+  ; frame_type = 64, offset_delta = 0
+  ; frame bytes: 64 1 
+  .stack 
+    offset 49
+    locals Integer
+    locals Integer
+    locals Integer
+    locals Integer
+    locals Integer
+    stack Integer
+    .end stack
+  ; append_frame (frameNumber = 8)
+  ; frame_type = 252, offset_delta = 10
+  ; frame bytes: 252 0 10 1 
+  .stack 
+    offset 60
+    locals Integer
+    locals Integer
+    locals Integer
+    locals Integer
+    locals Integer
+    locals Integer
+    .end stack
+  ; same_locals_1_stack_item_frame (frameNumber = 9)
+  ; frame_type = 64, offset_delta = 0
+  ; frame bytes: 64 1 
+  .stack 
+    offset 61
+    locals Integer
+    locals Integer
+    locals Integer
+    locals Integer
+    locals Integer
+    locals Integer
+    stack Integer
+    .end stack
 .end method
 
 

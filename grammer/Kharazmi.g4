@@ -55,21 +55,25 @@ expr returns[String type, Object value, boolean isID]:
     | methodCall
     | expr ADD term
     | expr SUB term
-    | expr bool_operand expr
+    | expr OR term
+    | expr compare_operation term
     | term;
 
 term returns[String type, Object value, boolean isID]:
     term MUL factor
     | term DIV factor
+    | term AND factor
     | factor;
 
 factor returns[String type, Object value, boolean isID]:
-    ID
+    TRUE
+    | FALSE
+    | ID
     | NUMBER
     | STRING
     | '(' expr ')';
 
-bool_operand: OR | AND | GT | LT | EQUAL;
+compare_operation: GT | LT | EQUAL | GT_EQUAL | LT_EQUAL;
 
 classDefinition:
     CLASS ID COLON (classStatement)* END
@@ -139,6 +143,9 @@ EQUAL: 'برابر' | 'مساوی' | '=';
 GT: '<' | 'بزرگتر';
 LT: '>' | 'کوچکتر';
 
+GT_EQUAL: '=<' | '<=' | 'بزرگتر مساوی' | 'بزرگترمساوی';
+LT_EQUAL: '=>' | '>=' | 'کوچکتر مساوی' | 'کوچکترمساوی';
+
 DOT: '.';
 COMMA: '،';
 COLON: ':';
@@ -157,6 +164,8 @@ PRINT_FUNCTION: 'چاپکن' | 'چاپ کن';
 ID: ('\u0620'..'\u06EF')('\u0620'..'\u06FF' | '‌' | '0'..'9')*;
 NUMBER: ('\u06F1'.. '\u06F9')('\u06F0'.. '\u06F9')* | ('1'..'9')('0'..'9')*;
 STRING: '«' .+? '»' | '»' .+? '«';
+TRUE: 'درست';
+FALSE: 'غلط' | 'نادرست' | 'نا درست';
 
 //NEWLINE: '\n';
 //WS: ' ';

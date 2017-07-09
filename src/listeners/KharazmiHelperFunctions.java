@@ -13,7 +13,7 @@ public class KharazmiHelperFunctions {
 
     public static String PrintFunctionCall(KharazmiParser.ExprContext exprContext,HashMap<String, KharazmiCodeGenerator.SymbolContext> symbolTable){
 
-        String type = exprContext.type.equals("str")? "Ljava/lang/String;" : "I";
+        String type = exprContext.type.equals("str")? "Ljava/lang/String;" : (exprContext.type.equals("int")? "I" : "Z");
 
         if (exprContext.isID){
             return "; push System.out onto the stack\n" +

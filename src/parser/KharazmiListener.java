@@ -138,15 +138,15 @@ public interface KharazmiListener extends ParseTreeListener {
 	 */
 	void exitFactor(KharazmiParser.FactorContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link KharazmiParser#bool_operand}.
+	 * Enter a parse tree produced by {@link KharazmiParser#compare_operation}.
 	 * @param ctx the parse tree
 	 */
-	void enterBool_operand(KharazmiParser.Bool_operandContext ctx);
+	void enterCompare_operation(KharazmiParser.Compare_operationContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link KharazmiParser#bool_operand}.
+	 * Exit a parse tree produced by {@link KharazmiParser#compare_operation}.
 	 * @param ctx the parse tree
 	 */
-	void exitBool_operand(KharazmiParser.Bool_operandContext ctx);
+	void exitCompare_operation(KharazmiParser.Compare_operationContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link KharazmiParser#classDefinition}.
 	 * @param ctx the parse tree

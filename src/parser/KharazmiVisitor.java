@@ -89,11 +89,11 @@ public interface KharazmiVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitFactor(KharazmiParser.FactorContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link KharazmiParser#bool_operand}.
+	 * Visit a parse tree produced by {@link KharazmiParser#compare_operation}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitBool_operand(KharazmiParser.Bool_operandContext ctx);
+	T visitCompare_operation(KharazmiParser.Compare_operationContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link KharazmiParser#classDefinition}.
 	 * @param ctx the parse tree
