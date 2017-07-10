@@ -23,13 +23,15 @@ import java.util.jar.Manifest;
 public class Kharazmi {
 
     public static void main(String[] args) throws IOException {
-//        String fileName = "samples/1_print.kh";
-        String fileName = "samples/4_if.kh";
-//        String fileName = "samples/3_expresion.kh";
-        File file = new File(fileName);
-        FileInputStream fis = null;
+        genrateAssemblyCode( "samples/4_if.kh");
+        compileJVMClass();
+    }
 
-//        try {
+    private static void genrateAssemblyCode(String fileName) throws IOException {
+
+        File file = new File(fileName);
+        FileInputStream fis;
+
         // Open the input file stream
         fis = new FileInputStream(file);
 
@@ -57,8 +59,8 @@ public class Kharazmi {
 
         try {
             URL location = Main.class.getProtectionDomain().getCodeSource().getLocation();
-            URL jasmin_path = new URL(location,"../"+outputName+".j");
-            System.out.println("Jasmin created in: "+jasmin_path);
+            URL jasmin_path = new URL(location, "../" + outputName + ".j");
+            System.out.println("Jasmin created in: " + jasmin_path);
             PrintWriter writer = new PrintWriter(jasmin_path.getPath(), "UTF-8");
 
             ParseTreeWalker walker = new ParseTreeWalker();
@@ -72,7 +74,9 @@ public class Kharazmi {
         } catch (FileNotFoundException | UnsupportedEncodingException e) {
             e.printStackTrace();
         }
+    }
 
+    static void compileJVMClass() throws IOException {
         Manifest manifest = new Manifest();
         manifest.getMainAttributes().put(Attributes.Name.MANIFEST_VERSION, "1.0");
         manifest.getMainAttributes().put(Attributes.Name.MAIN_CLASS, "KharazmiProgram");
@@ -81,16 +85,12 @@ public class Kharazmi {
         target.close();
     }
 
-    private static void add(File source, JarOutputStream target) throws IOException
-    {
+    private static void add(File source, JarOutputStream target) throws IOException {
         BufferedInputStream in = null;
-        try
-        {
-            if (source.isDirectory())
-            {
+        try {
+            if (source.isDirectory()) {
                 String name = source.getPath().replace("\\", "/");
-                if (!name.isEmpty())
-                {
+                if (!name.isEmpty()) {
                     if (!name.endsWith("/"))
                         name += "/";
                     JarEntry entry = new JarEntry(name);
@@ -98,7 +98,7 @@ public class Kharazmi {
                     target.putNextEntry(entry);
                     target.closeEntry();
                 }
-                for (File nestedFile: source.listFiles())
+                for (File nestedFile : source.listFiles())
                     add(nestedFile, target);
                 return;
             }
@@ -109,17 +109,14 @@ public class Kharazmi {
             in = new BufferedInputStream(new FileInputStream(source));
 
             byte[] buffer = new byte[1024];
-            while (true)
-            {
+            while (true) {
                 int count = in.read(buffer);
                 if (count == -1)
                     break;
                 target.write(buffer, 0, count);
             }
             target.closeEntry();
-        }
-        finally
-        {
+        } finally {
             if (in != null)
                 in.close();
         }

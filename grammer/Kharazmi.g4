@@ -99,7 +99,17 @@ parameters:
     ;
 
 ifStatement:
-    IF expr WAS COLON block (ELSE COLON block)? END
+    ifBlock (elseBlock)? END
+    ;
+
+ifBlock: ifHead block;
+
+elseBlock:
+    ELSE COLON block
+    ;
+
+ifHead:
+    IF expr WAS COLON
     ;
 
 whileStatement:

@@ -218,6 +218,36 @@ public interface KharazmiListener extends ParseTreeListener {
 	 */
 	void exitIfStatement(KharazmiParser.IfStatementContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link KharazmiParser#ifBlock}.
+	 * @param ctx the parse tree
+	 */
+	void enterIfBlock(KharazmiParser.IfBlockContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link KharazmiParser#ifBlock}.
+	 * @param ctx the parse tree
+	 */
+	void exitIfBlock(KharazmiParser.IfBlockContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link KharazmiParser#elseBlock}.
+	 * @param ctx the parse tree
+	 */
+	void enterElseBlock(KharazmiParser.ElseBlockContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link KharazmiParser#elseBlock}.
+	 * @param ctx the parse tree
+	 */
+	void exitElseBlock(KharazmiParser.ElseBlockContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link KharazmiParser#ifHead}.
+	 * @param ctx the parse tree
+	 */
+	void enterIfHead(KharazmiParser.IfHeadContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link KharazmiParser#ifHead}.
+	 * @param ctx the parse tree
+	 */
+	void exitIfHead(KharazmiParser.IfHeadContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link KharazmiParser#whileStatement}.
 	 * @param ctx the parse tree
 	 */

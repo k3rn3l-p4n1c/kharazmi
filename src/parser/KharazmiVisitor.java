@@ -137,6 +137,24 @@ public interface KharazmiVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitIfStatement(KharazmiParser.IfStatementContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link KharazmiParser#ifBlock}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIfBlock(KharazmiParser.IfBlockContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link KharazmiParser#elseBlock}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitElseBlock(KharazmiParser.ElseBlockContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link KharazmiParser#ifHead}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIfHead(KharazmiParser.IfHeadContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link KharazmiParser#whileStatement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

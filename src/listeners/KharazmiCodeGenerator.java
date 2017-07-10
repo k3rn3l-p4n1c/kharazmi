@@ -58,8 +58,19 @@ public class KharazmiCodeGenerator implements KharazmiListener {
     private int nextLabelNumber = 1;
 
     private String newLabel() {
-        return "L" + (nextLabelNumber++);
+        nextLabelNumber++;
+        return "L" + (nextLabelNumber);
     }
+
+    private String lastLabel() {
+        return lastLabel(0);
+    }
+
+    private String lastLabel(int i) {
+        return "L" + (nextLabelNumber - i);
+
+    }
+
 
     @Override
     public void enterProg(KharazmiParser.ProgContext ctx) {
@@ -93,13 +104,18 @@ public class KharazmiCodeGenerator implements KharazmiListener {
 
     @Override
     public void enterSubjectiveFunctionCall(KharazmiParser.SubjectiveFunctionCallContext ctx) {
+        if (ctx.PRINT_FUNCTION() != null) {
+            writer.println("getstatic java/lang/System/out Ljava/io/PrintStream;");
+        } else {
+            // TODO: call function ctx.ID()
+        }
 
     }
 
     @Override
     public void exitSubjectiveFunctionCall(KharazmiParser.SubjectiveFunctionCallContext ctx) {
         if (ctx.PRINT_FUNCTION() != null) {
-            writer.print(KharazmiHelperFunctions.PrintFunctionCall(ctx.expr(), symbolTable));
+            writer.println("invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V");
         } else {
             // TODO: call function ctx.ID()
         }
@@ -163,10 +179,8 @@ public class KharazmiCodeGenerator implements KharazmiListener {
             int id = newVarId();
             symbolTable.put(variable_name, new SymbolContext(variable_type, variable_name, false, id));
             if (ctx.expr().isID) {
-//                writer.println("iload " + symbolTable.get(ctx.expr().value.toString()).varId);
                 writer.println("istore " + id);
             } else {
-//                writer.println("bipush " + ctx.expr().value);
                 writer.println("istore " + id);
             }
         }
@@ -195,27 +209,11 @@ public class KharazmiCodeGenerator implements KharazmiListener {
             }
 
             writer.println("iadd");
-
-            int id = newTemp();
-            ctx.isID = true;
-            String variable_name = "#" + id;
-            symbolTable.put(variable_name, new SymbolContext("int", variable_name, true, id));
-            writer.println("istore " + id);
-            ctx.type = "int";
-            ctx.value = variable_name;
         } else if (ctx.SUB() != null) {
             if (!ctx.term().type.equals(ctx.expr().type) || !ctx.term().type.equals("int")) {
                 throw new RuntimeException("Can not apply operand " + ctx.SUB().getText() + " between " + ctx.expr().type + " and " + ctx.term().type);
             }
             writer.println("isub");
-
-            int id = newTemp();
-            ctx.isID = true;
-            String variable_name = "#" + id;
-            symbolTable.put(variable_name, new SymbolContext("int", variable_name, true, id));
-            writer.println("istore " + id);
-            ctx.type = "int";
-            ctx.value = variable_name;
 
         } else if (ctx.compare_operation() != null) {
             if (ctx.term().type.equals(ctx.expr().type) && ctx.term().type.equals("int")) {
@@ -239,15 +237,6 @@ public class KharazmiCodeGenerator implements KharazmiListener {
                 writer.println(l1 + ":");
                 writer.println("iconst_0");
                 writer.println(l2 + ":");
-
-                int id = newTemp();
-                ctx.isID = true;
-                String variable_name = "#" + id;
-                symbolTable.put(variable_name, new SymbolContext("int", variable_name, true, id));
-                writer.println("istore " + id);
-                ctx.type = "bool";
-                ctx.value = variable_name;
-
             } else {
                 throw new RuntimeException("Can not apply operand " + ctx.compare_operation().getText() + " between " + ctx.expr().type + " and " + ctx.term().type);
             }
@@ -280,30 +269,12 @@ public class KharazmiCodeGenerator implements KharazmiListener {
             }
 
             writer.println("imul");
-
-            int id = newTemp();
-            ctx.isID = true;
-            String variable_name = "#" + id;
-            symbolTable.put(variable_name, new SymbolContext("int", variable_name, true, id));
-            writer.println("istore " + id);
-            ctx.type = "int";
-            ctx.value = variable_name;
-
         } else if (ctx.DIV() != null) {
             if (!ctx.term().type.equals(ctx.factor().type) || !ctx.term().type.equals("int")) {
                 throw new RuntimeException("Can not apply operand " + ctx.DIV().getText() + " between " + ctx.term().type + " and " + ctx.factor().type);
             }
 
             writer.println("idiv");
-
-            int id = newTemp();
-            ctx.isID = true;
-            String variable_name = "#" + id;
-            symbolTable.put(variable_name, new SymbolContext("int", variable_name, true, id));
-            writer.println("istore " + id);
-            ctx.type = "int";
-            ctx.value = variable_name;
-
         } else {
             ctx.type = ctx.factor().type;
             ctx.isID = ctx.factor().isID;
@@ -331,7 +302,7 @@ public class KharazmiCodeGenerator implements KharazmiListener {
             ctx.type = "str";
             ctx.isID = false;
             ctx.value = ctx.STRING().getText().substring(1, ctx.getText().length() - 1);
-            writer.println("ldc \"" + ctx.value+"\"");
+            writer.println("ldc \"" + ctx.value + "\"");
         } else if (ctx.NUMBER() != null) {
             ctx.type = "int";
             ctx.isID = false;
@@ -432,7 +403,38 @@ public class KharazmiCodeGenerator implements KharazmiListener {
 
     @Override
     public void exitIfStatement(KharazmiParser.IfStatementContext ctx) {
+        writer.println(lastLabel() + ":");
+    }
 
+    @Override
+    public void enterIfBlock(KharazmiParser.IfBlockContext ctx) {
+
+    }
+
+    @Override
+    public void exitIfBlock(KharazmiParser.IfBlockContext ctx) {
+        writer.println("goto " + newLabel());
+        writer.println(lastLabel(1) + ":");
+    }
+
+    @Override
+    public void enterElseBlock(KharazmiParser.ElseBlockContext ctx) {
+
+    }
+
+    @Override
+    public void exitElseBlock(KharazmiParser.ElseBlockContext ctx) {
+
+    }
+
+    @Override
+    public void enterIfHead(KharazmiParser.IfHeadContext ctx) {
+
+    }
+
+    @Override
+    public void exitIfHead(KharazmiParser.IfHeadContext ctx) {
+        writer.println("ifeq " + newLabel());
     }
 
     @Override
