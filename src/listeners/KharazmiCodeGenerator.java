@@ -3,7 +3,6 @@ package listeners;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
-import parser.KharazmiLexer;
 import parser.KharazmiListener;
 import parser.KharazmiParser;
 
@@ -16,12 +15,13 @@ import java.util.HashSet;
  */
 public class KharazmiCodeGenerator implements KharazmiListener {
 
-    class SymbolContext{
+    class SymbolContext {
         public String type;
         public String name;
         public boolean isTemp;
         public int varId;
-        public SymbolContext(String type, String name, boolean isTemp, int varId){
+
+        public SymbolContext(String type, String name, boolean isTemp, int varId) {
             this.type = type;
             this.name = name;
             this.isTemp = isTemp;
@@ -39,24 +39,27 @@ public class KharazmiCodeGenerator implements KharazmiListener {
     }
 
     HashSet<Integer> tempSet;
-    private boolean isTemp(int id){
+
+    private boolean isTemp(int id) {
         return tempSet.contains(id);
     }
 
-    private int newTemp(){
+    private int newTemp() {
         int id = newVarId();
         tempSet.contains(id);
         return id;
     }
 
     private int nextVarId = 1;
-    private int newVarId(){
+
+    private int newVarId() {
         return nextVarId++;
     }
 
     private int nextLabelNumber = 1;
-    private String newLabel(){
-        return "L" + (nextLabelNumber++) + ":";
+
+    private String newLabel() {
+        return "L" + (nextLabelNumber++);
     }
 
     @Override
@@ -96,9 +99,9 @@ public class KharazmiCodeGenerator implements KharazmiListener {
 
     @Override
     public void exitSubjectiveFunctionCall(KharazmiParser.SubjectiveFunctionCallContext ctx) {
-        if (ctx.PRINT_FUNCTION() != null){
+        if (ctx.PRINT_FUNCTION() != null) {
             bytecode += KharazmiHelperFunctions.PrintFunctionCall(ctx.expr(), symbolTable);
-        }else{
+        } else {
             // TODO: call function ctx.ID()
         }
     }
@@ -161,11 +164,11 @@ public class KharazmiCodeGenerator implements KharazmiListener {
             int id = newVarId();
             symbolTable.put(variable_name, new SymbolContext(variable_type, variable_name, false, id));
             if (ctx.expr().isID)
-                bytecode += "iload "+ symbolTable.get((String) ctx.expr().value).varId +"\n" +
-                            "istore "+id+"\n";
+                bytecode += "iload " + symbolTable.get((String) ctx.expr().value).varId + "\n" +
+                        "istore " + id + "\n";
             else
-                bytecode += "bipush "+ ctx.expr().value +"\n" +
-                            "istore "+id+"\n";
+                bytecode += "bipush " + ctx.expr().value + "\n" +
+                        "istore " + id + "\n";
         }
     }
 
@@ -256,32 +259,32 @@ public class KharazmiCodeGenerator implements KharazmiListener {
 
                 if (ctx.expr().isID) {
                     bytecode += "iload " + symbolTable.get((String) ctx.expr().value).varId + "\n";
-                }else{
+                } else {
                     bytecode += "bipush " + ctx.expr().value + "\n";
                 }
 
                 if (ctx.term().isID) {
                     bytecode += "iload " + symbolTable.get((String) ctx.term().value).varId + "\n";
-                }else{
+                } else {
                     bytecode += "bipush " + ctx.term().value + "\n";
                 }
 
                 if (ctx.compare_operation().GT() != null)
-                    bytecode += "if_icmple "+l1+"\n";
+                    bytecode += "if_icmple " + l1 + "\n";
                 else if (ctx.compare_operation().GT_EQUAL() != null)
-                    bytecode += "if_icmplt "+l1+"\n";
+                    bytecode += "if_icmplt " + l1 + "\n";
                 else if (ctx.compare_operation().LT() != null)
-                    bytecode += "if_icmpge "+l1+"\n";
+                    bytecode += "if_icmpge " + l1 + "\n";
                 else if (ctx.compare_operation().LT_EQUAL() != null)
-                    bytecode += "if_icmpgt "+l1+"\n";
+                    bytecode += "if_icmpgt " + l1 + "\n";
                 else if (ctx.compare_operation().EQUAL() != null)
-                    bytecode += "if_icmpne "+l1+"\n";
+                    bytecode += "if_icmpne " + l1 + "\n";
 
                 bytecode += "iconst_1\n";
                 bytecode += "goto " + l2 + "\n";
-                bytecode += l1 + " \n";
+                bytecode += l1 + ": \n";
                 bytecode += "iconst_0\n";
-                bytecode += l2 + " \n";
+                bytecode += l2 + ": \n";
 
                 int id = newTemp();
                 ctx.isID = true;
@@ -300,11 +303,11 @@ public class KharazmiCodeGenerator implements KharazmiListener {
             } else {
                 throw new RuntimeException("Can not apply operand " + ctx.SUB().getText() + " between " + ctx.expr().type + " and " + ctx.term().type);
             }
-        }else if (ctx.term() != null){
+        } else if (ctx.term() != null) {
             ctx.type = ctx.term().type;
             ctx.isID = ctx.term().isID;
             ctx.value = ctx.term().value;
-        }else{
+        } else {
             // TODO
         }
 
@@ -319,67 +322,67 @@ public class KharazmiCodeGenerator implements KharazmiListener {
     public void exitTerm(KharazmiParser.TermContext ctx) {
         if (ctx.MUL() != null) {
             if (ctx.term().type.equals(ctx.factor().type) && ctx.term().type.equals("int")) {
-                if (ctx.term().isID){
-                    if (ctx.factor().isID){
-                        bytecode += "iload "+symbolTable.get((String) ctx.term().value).varId+"\n" +
-                                    "iload "+symbolTable.get((String) ctx.factor().value).varId+"\n" +
-                                    "imul\n";
-                    }else{
-                        bytecode += "iload "+symbolTable.get((String) ctx.term().value).varId+"\n" +
-                                    "bipush "+ctx.factor().value+"\n" +
-                                    "imul\n";
+                if (ctx.term().isID) {
+                    if (ctx.factor().isID) {
+                        bytecode += "iload " + symbolTable.get((String) ctx.term().value).varId + "\n" +
+                                "iload " + symbolTable.get((String) ctx.factor().value).varId + "\n" +
+                                "imul\n";
+                    } else {
+                        bytecode += "iload " + symbolTable.get((String) ctx.term().value).varId + "\n" +
+                                "bipush " + ctx.factor().value + "\n" +
+                                "imul\n";
                     }
-                }else if (ctx.factor().isID){
-                    bytecode += "bipush "+ctx.term().value+"\n" +
-                                "iload "+symbolTable.get((String) ctx.factor().value).varId+"\n" +
-                                "imul\n";
-                }else{
-                    bytecode += "bipush "+ctx.term().value+"\n" +
-                                "bipush "+ctx.factor().value+"\n" +
-                                "imul\n";
+                } else if (ctx.factor().isID) {
+                    bytecode += "bipush " + ctx.term().value + "\n" +
+                            "iload " + symbolTable.get((String) ctx.factor().value).varId + "\n" +
+                            "imul\n";
+                } else {
+                    bytecode += "bipush " + ctx.term().value + "\n" +
+                            "bipush " + ctx.factor().value + "\n" +
+                            "imul\n";
                 }
                 int id = newTemp();
                 ctx.isID = true;
-                String variable_name = "#"+id;
+                String variable_name = "#" + id;
                 symbolTable.put(variable_name, new SymbolContext("int", variable_name, true, id));
-                bytecode += "istore "+id+"\n";
+                bytecode += "istore " + id + "\n";
                 ctx.type = "int";
                 ctx.value = variable_name;
             } else {
-                throw new RuntimeException("Can not apply operand " + ctx.MUL().getText() + " between "+ctx.term().type + " and "+ctx.factor().type);
+                throw new RuntimeException("Can not apply operand " + ctx.MUL().getText() + " between " + ctx.term().type + " and " + ctx.factor().type);
             }
         } else if (ctx.DIV() != null) {
             if (ctx.term().type.equals(ctx.factor().type) && ctx.term().type.equals("int")) {
-                if (ctx.term().isID){
-                    if (ctx.factor().isID){
-                        bytecode += "iload "+symbolTable.get((String) ctx.term().value).varId+"\n" +
-                                "iload "+symbolTable.get((String) ctx.factor().value).varId+"\n" +
+                if (ctx.term().isID) {
+                    if (ctx.factor().isID) {
+                        bytecode += "iload " + symbolTable.get((String) ctx.term().value).varId + "\n" +
+                                "iload " + symbolTable.get((String) ctx.factor().value).varId + "\n" +
                                 "idiv\n";
-                    }else{
-                        bytecode += "iload "+symbolTable.get((String) ctx.term().value).varId+"\n" +
-                                "bipush "+ctx.factor().value+"\n" +
+                    } else {
+                        bytecode += "iload " + symbolTable.get((String) ctx.term().value).varId + "\n" +
+                                "bipush " + ctx.factor().value + "\n" +
                                 "idiv\n";
                     }
-                }else if (ctx.factor().isID){
-                    bytecode += "bipush "+ctx.term().value+"\n" +
-                            "iload "+symbolTable.get((String) ctx.factor().value).varId+"\n" +
+                } else if (ctx.factor().isID) {
+                    bytecode += "bipush " + ctx.term().value + "\n" +
+                            "iload " + symbolTable.get((String) ctx.factor().value).varId + "\n" +
                             "idiv\n";
-                }else{
-                    bytecode += "bipush "+ctx.term().value+"\n" +
-                            "bipush "+ctx.factor().value+"\n" +
+                } else {
+                    bytecode += "bipush " + ctx.term().value + "\n" +
+                            "bipush " + ctx.factor().value + "\n" +
                             "idiv\n";
                 }
                 int id = newTemp();
                 ctx.isID = true;
-                String variable_name = "#"+id;
+                String variable_name = "#" + id;
                 symbolTable.put(variable_name, new SymbolContext("int", variable_name, true, id));
-                bytecode += "istore "+id+"\n";
+                bytecode += "istore " + id + "\n";
                 ctx.type = "int";
                 ctx.value = variable_name;
             } else {
-                throw new RuntimeException("Can not apply operand " + ctx.DIV().getText() + " between "+ctx.term().type + " and "+ctx.factor().type);
+                throw new RuntimeException("Can not apply operand " + ctx.DIV().getText() + " between " + ctx.term().type + " and " + ctx.factor().type);
             }
-        }else{
+        } else {
             ctx.type = ctx.factor().type;
             ctx.isID = ctx.factor().isID;
             ctx.value = ctx.factor().value;
@@ -404,7 +407,7 @@ public class KharazmiCodeGenerator implements KharazmiListener {
         } else if (ctx.STRING() != null) {
             ctx.type = "str";
             ctx.isID = false;
-            ctx.value = ctx.STRING().getText().substring(1, ctx.getText().length()-1);
+            ctx.value = ctx.STRING().getText().substring(1, ctx.getText().length() - 1);
         } else if (ctx.NUMBER() != null) {
             ctx.type = "int";
             ctx.isID = false;
@@ -417,7 +420,7 @@ public class KharazmiCodeGenerator implements KharazmiListener {
             ctx.type = "bool";
             ctx.isID = false;
             ctx.value = "0";
-        }else{
+        } else {
             ctx.type = ctx.expr().type;
             ctx.isID = ctx.expr().isID;
             ctx.value = ctx.expr().value;

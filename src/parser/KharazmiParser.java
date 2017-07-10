@@ -1,4 +1,4 @@
-// Generated from /media/asemanmanzar/Mohsen/Programming/Java/KharazmiCompiler/grammer/Kharazmi.g4 by ANTLR 4.7
+// Generated from /Users/Bardia/IdeaProjects/compiler/grammer/Kharazmi.g4 by ANTLR 4.7
 package parser;
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
@@ -1749,7 +1749,10 @@ public class KharazmiParser extends Parser {
 			return getRuleContext(ExprContext.class,0);
 		}
 		public TerminalNode WAS() { return getToken(KharazmiParser.WAS, 0); }
-		public TerminalNode COLON() { return getToken(KharazmiParser.COLON, 0); }
+		public List<TerminalNode> COLON() { return getTokens(KharazmiParser.COLON); }
+		public TerminalNode COLON(int i) {
+			return getToken(KharazmiParser.COLON, i);
+		}
 		public List<BlockContext> block() {
 			return getRuleContexts(BlockContext.class);
 		}
@@ -1794,7 +1797,7 @@ public class KharazmiParser extends Parser {
 			match(COLON);
 			setState(262);
 			block();
-			setState(265);
+			setState(266);
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			if (_la==ELSE) {
@@ -1802,11 +1805,13 @@ public class KharazmiParser extends Parser {
 				setState(263);
 				match(ELSE);
 				setState(264);
+				match(COLON);
+				setState(265);
 				block();
 				}
 			}
 
-			setState(267);
+			setState(268);
 			match(END);
 			}
 		}
@@ -1855,13 +1860,13 @@ public class KharazmiParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(269);
-			match(WHILE);
 			setState(270);
-			expr(0);
+			match(WHILE);
 			setState(271);
-			block();
+			expr(0);
 			setState(272);
+			block();
+			setState(273);
 			match(END);
 			}
 		}
@@ -1911,15 +1916,15 @@ public class KharazmiParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(274);
-			expr(0);
 			setState(275);
-			match(REPEAT);
+			expr(0);
 			setState(276);
-			match(COLON);
+			match(REPEAT);
 			setState(277);
-			block();
+			match(COLON);
 			setState(278);
+			block();
+			setState(279);
 			match(END);
 			}
 		}
@@ -1971,19 +1976,19 @@ public class KharazmiParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(280);
-			match(FOREACH);
 			setState(281);
-			match(ID);
+			match(FOREACH);
 			setState(282);
-			match(IN);
+			match(ID);
 			setState(283);
-			expr(0);
+			match(IN);
 			setState(284);
-			match(COLON);
+			expr(0);
 			setState(285);
-			block();
+			match(COLON);
 			setState(286);
+			block();
+			setState(287);
 			match(END);
 			}
 		}
@@ -2027,11 +2032,11 @@ public class KharazmiParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(288);
-			match(RETURN);
 			setState(289);
-			match(ID);
+			match(RETURN);
 			setState(290);
+			match(ID);
+			setState(291);
 			match(DOT);
 			}
 		}
@@ -2081,7 +2086,7 @@ public class KharazmiParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3+\u0127\4\2\t\2\4"+
+		"\3\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\3+\u0128\4\2\t\2\4"+
 		"\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t"+
 		"\13\4\f\t\f\4\r\t\r\4\16\t\16\4\17\t\17\4\20\t\20\4\21\t\21\4\22\t\22"+
 		"\4\23\t\23\4\24\t\24\4\25\t\25\4\26\t\26\4\27\t\27\4\30\t\30\4\31\t\31"+
@@ -2100,15 +2105,15 @@ public class KharazmiParser extends Parser {
 		"\u00e3\n\21\3\22\3\22\3\22\3\22\3\23\3\23\3\23\3\23\5\23\u00ed\n\23\3"+
 		"\23\3\23\3\23\3\23\3\24\3\24\3\24\3\24\5\24\u00f7\n\24\3\24\3\24\3\24"+
 		"\3\24\3\25\3\25\3\25\7\25\u0100\n\25\f\25\16\25\u0103\13\25\3\26\3\26"+
-		"\3\26\3\26\3\26\3\26\3\26\5\26\u010c\n\26\3\26\3\26\3\27\3\27\3\27\3\27"+
-		"\3\27\3\30\3\30\3\30\3\30\3\30\3\30\3\31\3\31\3\31\3\31\3\31\3\31\3\31"+
-		"\3\31\3\32\3\32\3\32\3\32\3\32\2\4\26\30\33\2\4\6\b\n\f\16\20\22\24\26"+
-		"\30\32\34\36 \"$&(*,.\60\62\2\3\3\2\27\33\2\u0137\2\64\3\2\2\2\4:\3\2"+
-		"\2\2\6I\3\2\2\2\bU\3\2\2\2\na\3\2\2\2\fc\3\2\2\2\16j\3\2\2\2\20\u0090"+
+		"\3\26\3\26\3\26\3\26\3\26\3\26\5\26\u010d\n\26\3\26\3\26\3\27\3\27\3\27"+
+		"\3\27\3\27\3\30\3\30\3\30\3\30\3\30\3\30\3\31\3\31\3\31\3\31\3\31\3\31"+
+		"\3\31\3\31\3\32\3\32\3\32\3\32\3\32\2\4\26\30\33\2\4\6\b\n\f\16\20\22"+
+		"\24\26\30\32\34\36 \"$&(*,.\60\62\2\3\3\2\27\33\2\u0138\2\64\3\2\2\2\4"+
+		":\3\2\2\2\6I\3\2\2\2\bU\3\2\2\2\na\3\2\2\2\fc\3\2\2\2\16j\3\2\2\2\20\u0090"+
 		"\3\2\2\2\22\u0092\3\2\2\2\24\u0098\3\2\2\2\26\u00a3\3\2\2\2\30\u00b7\3"+
 		"\2\2\2\32\u00d1\3\2\2\2\34\u00d3\3\2\2\2\36\u00d5\3\2\2\2 \u00e2\3\2\2"+
 		"\2\"\u00e4\3\2\2\2$\u00e8\3\2\2\2&\u00f2\3\2\2\2(\u00fc\3\2\2\2*\u0104"+
-		"\3\2\2\2,\u010f\3\2\2\2.\u0114\3\2\2\2\60\u011a\3\2\2\2\62\u0122\3\2\2"+
+		"\3\2\2\2,\u0110\3\2\2\2.\u0115\3\2\2\2\60\u011b\3\2\2\2\62\u0123\3\2\2"+
 		"\2\64\65\5\4\3\2\65\66\7\2\2\3\66\3\3\2\2\2\679\5\6\4\28\67\3\2\2\29<"+
 		"\3\2\2\2:8\3\2\2\2:;\3\2\2\2;\5\3\2\2\2<:\3\2\2\2=J\5\36\20\2>J\5&\24"+
 		"\2?J\5\22\n\2@J\5\24\13\2AJ\5*\26\2BJ\5,\27\2CJ\5.\30\2DJ\5\60\31\2EJ"+
@@ -2168,16 +2173,17 @@ public class KharazmiParser extends Parser {
 		"\u0100\7&\2\2\u00ff\u00fd\3\2\2\2\u0100\u0103\3\2\2\2\u0101\u00ff\3\2"+
 		"\2\2\u0101\u0102\3\2\2\2\u0102)\3\2\2\2\u0103\u0101\3\2\2\2\u0104\u0105"+
 		"\7\13\2\2\u0105\u0106\5\26\f\2\u0106\u0107\7\b\2\2\u0107\u0108\7\36\2"+
-		"\2\u0108\u010b\5\4\3\2\u0109\u010a\7\f\2\2\u010a\u010c\5\4\3\2\u010b\u0109"+
-		"\3\2\2\2\u010b\u010c\3\2\2\2\u010c\u010d\3\2\2\2\u010d\u010e\7\23\2\2"+
-		"\u010e+\3\2\2\2\u010f\u0110\7\r\2\2\u0110\u0111\5\26\f\2\u0111\u0112\5"+
-		"\4\3\2\u0112\u0113\7\23\2\2\u0113-\3\2\2\2\u0114\u0115\5\26\f\2\u0115"+
-		"\u0116\7$\2\2\u0116\u0117\7\36\2\2\u0117\u0118\5\4\3\2\u0118\u0119\7\23"+
-		"\2\2\u0119/\3\2\2\2\u011a\u011b\7\16\2\2\u011b\u011c\7&\2\2\u011c\u011d"+
-		"\7\17\2\2\u011d\u011e\5\26\f\2\u011e\u011f\7\36\2\2\u011f\u0120\5\4\3"+
-		"\2\u0120\u0121\7\23\2\2\u0121\61\3\2\2\2\u0122\u0123\7\22\2\2\u0123\u0124"+
-		"\7&\2\2\u0124\u0125\7\34\2\2\u0125\63\3\2\2\2\31:IUY^afu\177\u008d\u0090"+
-		"\u00a3\u00b2\u00b4\u00c3\u00c5\u00d1\u00db\u00e2\u00ec\u00f6\u0101\u010b";
+		"\2\u0108\u010c\5\4\3\2\u0109\u010a\7\f\2\2\u010a\u010b\7\36\2\2\u010b"+
+		"\u010d\5\4\3\2\u010c\u0109\3\2\2\2\u010c\u010d\3\2\2\2\u010d\u010e\3\2"+
+		"\2\2\u010e\u010f\7\23\2\2\u010f+\3\2\2\2\u0110\u0111\7\r\2\2\u0111\u0112"+
+		"\5\26\f\2\u0112\u0113\5\4\3\2\u0113\u0114\7\23\2\2\u0114-\3\2\2\2\u0115"+
+		"\u0116\5\26\f\2\u0116\u0117\7$\2\2\u0117\u0118\7\36\2\2\u0118\u0119\5"+
+		"\4\3\2\u0119\u011a\7\23\2\2\u011a/\3\2\2\2\u011b\u011c\7\16\2\2\u011c"+
+		"\u011d\7&\2\2\u011d\u011e\7\17\2\2\u011e\u011f\5\26\f\2\u011f\u0120\7"+
+		"\36\2\2\u0120\u0121\5\4\3\2\u0121\u0122\7\23\2\2\u0122\61\3\2\2\2\u0123"+
+		"\u0124\7\22\2\2\u0124\u0125\7&\2\2\u0125\u0126\7\34\2\2\u0126\63\3\2\2"+
+		"\2\31:IUY^afu\177\u008d\u0090\u00a3\u00b2\u00b4\u00c3\u00c5\u00d1\u00db"+
+		"\u00e2\u00ec\u00f6\u0101\u010c";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

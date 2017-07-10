@@ -1,3 +1,4 @@
+import jasmin.Main;
 import listeners.KharazmiCodeGenerator;
 import listeners.ThrowingErrorListener;
 import org.antlr.v4.runtime.ANTLRInputStream;
@@ -15,8 +16,6 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
 
-import jasmin.Main;
-
 
 /**
  * Created by Bardia on 3/10/17.
@@ -25,7 +24,7 @@ public class Kharazmi {
 
     public static void main(String[] args) throws IOException {
 //        String fileName = "samples/1_print.kh";
-        String fileName = "samples/2_variable.kh";
+        String fileName = "samples/4_if.kh";
 //        String fileName = "samples/3_expresion.kh";
         File file = new File(fileName);
         FileInputStream fis = null;
