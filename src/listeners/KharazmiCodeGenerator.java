@@ -164,7 +164,7 @@ public class KharazmiCodeGenerator implements KharazmiListener {
         String variable_type = ctx.expr().type;
         if (symbolTable.containsKey(variable_name)) {
             if (!symbolTable.get(variable_name).type.equals(variable_type)) {
-                throw new RuntimeException(variable_name + " except " + symbolTable.get(variable_name) + " but it got " + variable_type);
+                throw new RuntimeException(variable_name + " except " + symbolTable.get(variable_name).type + " but it got " + variable_type);
             }
         } else {
             int id = newVarId();

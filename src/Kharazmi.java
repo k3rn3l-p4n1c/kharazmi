@@ -23,11 +23,17 @@ import java.util.jar.Manifest;
 public class Kharazmi {
 
     public static void main(String[] args) throws IOException {
-        genrateAssemblyCode( "samples/4_bool_operator.kh");
+//        generateJasminCode( "samples/1_print.kh");
+//        generateJasminCode( "samples/2_variable.kh");
+//        generateJasminCode( "samples/3_bool_expresion.kh");
+//        generateJasminCode( "samples/3_expresion.kh");
+        generateJasminCode( "samples/4_bool_operator.kh");
+//        generateJasminCode( "samples/4_if.kh");
+//        generateJasminCode( "samples/5_repeat.kh");
         compileJVMClass();
     }
 
-    private static void genrateAssemblyCode(String fileName) throws IOException {
+    private static void generateJasminCode(String fileName) throws IOException {
 
         File file = new File(fileName);
         FileInputStream fis;
