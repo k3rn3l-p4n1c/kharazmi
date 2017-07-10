@@ -115,9 +115,11 @@ ifHead:
     IF expr WAS COLON
     ;
 
-whileStatement:
-    WHILE expr block END
+whileStatement returns[String l_end, String l_loop]:
+    while_expr POSTFIX_DEFINE COLON block END
     ;
+
+while_expr: WHILE expr;
 
 repeatStatement returns[int itratorIndex, String startLabel, String endLabel]:
     expr repeatBlock
@@ -137,14 +139,14 @@ returnStatement:
 
 
 // key words
-POSTFIX_DEFINE: 'است' | 'اند' | 'هست' | 'هستند';
+POSTFIX_DEFINE: 'است' | 'اند' | 'هست' | 'هستند' | 'شود';
 PREFIX_DEFINE: 'تعریف';
 WAS : 'بود' | 'باشد' | 'بودند' | 'باشند';
 CLASS: 'رسته';
 FUNCTION: 'تابع';
 IF: 'اگر';
 ELSE: 'وگرنه';
-WHILE: 'تا هنگامی که';
+WHILE: 'تا هنگامی که' | 'تا زمانی که';
 FOREACH: 'برای هر';
 From: 'از';
 TO: 'تا';

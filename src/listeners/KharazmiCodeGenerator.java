@@ -167,6 +167,7 @@ public class KharazmiCodeGenerator implements KharazmiListener {
             if (!symbolTable.get(variable_name).type.equals(variable_type)) {
                 throw new RuntimeException(variable_name + " except " + symbolTable.get(variable_name).type + " but it got " + variable_type);
             }
+            writer.println("istore " + symbolTable.get(variable_name).varId);
         } else {
             int id = newVarId();
             symbolTable.put(variable_name, new SymbolContext(variable_type, variable_name, false, id));
@@ -478,12 +479,25 @@ public class KharazmiCodeGenerator implements KharazmiListener {
 
     @Override
     public void enterWhileStatement(KharazmiParser.WhileStatementContext ctx) {
-
+        ctx.l_loop = newLabel();
+        ctx.l_end = newLabel();
+        writer.println(ctx.l_loop+":");
     }
 
     @Override
     public void exitWhileStatement(KharazmiParser.WhileStatementContext ctx) {
+        writer.println("goto "+ctx.l_loop);
+        writer.println(ctx.l_end+":");
+    }
 
+    @Override
+    public void enterWhile_expr(KharazmiParser.While_exprContext ctx) {
+
+    }
+
+    @Override
+    public void exitWhile_expr(KharazmiParser.While_exprContext ctx) {
+        writer.println("ifeq " + ((KharazmiParser.WhileStatementContext)ctx.getParent()).l_end);
     }
 
     @Override

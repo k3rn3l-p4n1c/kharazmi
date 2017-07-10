@@ -173,6 +173,12 @@ public interface KharazmiVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitWhileStatement(KharazmiParser.WhileStatementContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link KharazmiParser#while_expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitWhile_expr(KharazmiParser.While_exprContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link KharazmiParser#repeatStatement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

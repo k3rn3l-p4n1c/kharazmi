@@ -340,6 +340,18 @@ public class KharazmiBaseListener implements KharazmiListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterWhile_expr(KharazmiParser.While_exprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitWhile_expr(KharazmiParser.While_exprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterRepeatStatement(KharazmiParser.RepeatStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}

@@ -278,6 +278,16 @@ public interface KharazmiListener extends ParseTreeListener {
 	 */
 	void exitWhileStatement(KharazmiParser.WhileStatementContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link KharazmiParser#while_expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterWhile_expr(KharazmiParser.While_exprContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link KharazmiParser#while_expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitWhile_expr(KharazmiParser.While_exprContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link KharazmiParser#repeatStatement}.
 	 * @param ctx the parse tree
 	 */
