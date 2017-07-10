@@ -163,10 +163,10 @@ public class KharazmiCodeGenerator implements KharazmiListener {
             int id = newVarId();
             symbolTable.put(variable_name, new SymbolContext(variable_type, variable_name, false, id));
             if (ctx.expr().isID) {
-                writer.println("iload " + symbolTable.get(ctx.expr().value.toString()).varId);
+//                writer.println("iload " + symbolTable.get(ctx.expr().value.toString()).varId);
                 writer.println("istore " + id);
             } else {
-                writer.println("bipush " + ctx.expr().value);
+//                writer.println("bipush " + ctx.expr().value);
                 writer.println("istore " + id);
             }
         }
@@ -190,84 +190,38 @@ public class KharazmiCodeGenerator implements KharazmiListener {
     @Override
     public void exitExpr(KharazmiParser.ExprContext ctx) {
         if (ctx.ADD() != null) {
-            if (ctx.term().type.equals(ctx.expr().type) && ctx.term().type.equals("int")) {
-                if (ctx.expr().isID) {
-                    if (ctx.term().isID) {
-                        writer.println("iload " + symbolTable.get(ctx.expr().value.toString()).varId);
-                        writer.println("iload " + symbolTable.get(ctx.term().value.toString()).varId);
-                        writer.println("iadd");
-                    } else {
-                        writer.println("iload " + symbolTable.get(ctx.expr().value.toString()).varId);
-                        writer.println("bipush " + ctx.term().value);
-                        writer.println("iadd");
-                    }
-                } else if (ctx.term().isID) {
-                    writer.println("bipush " + ctx.expr().value);
-                    writer.println("iload " + symbolTable.get(ctx.term().value.toString()).varId);
-                    writer.println("iadd");
-                } else {
-                    writer.println("bipush " + ctx.expr().value);
-                    writer.println("bipush " + ctx.term().value);
-                    writer.println("iadd");
-                }
-                int id = newTemp();
-                ctx.isID = true;
-                String variable_name = "#" + id;
-                symbolTable.put(variable_name, new SymbolContext("int", variable_name, true, id));
-                writer.println("istore " + id);
-                ctx.type = "int";
-                ctx.value = variable_name;
-            } else {
+            if (!ctx.term().type.equals(ctx.expr().type) || !ctx.term().type.equals("int")) {
                 throw new RuntimeException("Can not apply operand " + ctx.ADD().getText() + " between " + ctx.expr().type + " and " + ctx.term().type);
             }
+
+            writer.println("iadd");
+
+            int id = newTemp();
+            ctx.isID = true;
+            String variable_name = "#" + id;
+            symbolTable.put(variable_name, new SymbolContext("int", variable_name, true, id));
+            writer.println("istore " + id);
+            ctx.type = "int";
+            ctx.value = variable_name;
         } else if (ctx.SUB() != null) {
-            if (ctx.term().type.equals(ctx.expr().type) && ctx.term().type.equals("int")) {
-                if (ctx.expr().isID) {
-                    if (ctx.term().isID) {
-                        writer.println("iload " + symbolTable.get(ctx.expr().value.toString()).varId);
-                        writer.println("iload " + symbolTable.get(ctx.term().value.toString()).varId);
-                        writer.println("isub");
-                    } else {
-                        writer.println("iload " + symbolTable.get(ctx.expr().value.toString()).varId);
-                        writer.println("bipush " + ctx.term().value);
-                        writer.println("isub");
-                    }
-                } else if (ctx.term().isID) {
-                    writer.println("bipush " + ctx.expr().value);
-                    writer.println("iload " + symbolTable.get(ctx.term().value.toString()).varId);
-                    writer.println("isub");
-                } else {
-                    writer.println("bipush " + ctx.expr().value);
-                    writer.println("bipush " + ctx.term().value);
-                    writer.println("isub");
-                }
-                int id = newTemp();
-                ctx.isID = true;
-                String variable_name = "#" + id;
-                symbolTable.put(variable_name, new SymbolContext("int", variable_name, true, id));
-                writer.println("istore " + id);
-                ctx.type = "int";
-                ctx.value = variable_name;
-            } else {
+            if (!ctx.term().type.equals(ctx.expr().type) || !ctx.term().type.equals("int")) {
                 throw new RuntimeException("Can not apply operand " + ctx.SUB().getText() + " between " + ctx.expr().type + " and " + ctx.term().type);
             }
+            writer.println("isub");
+
+            int id = newTemp();
+            ctx.isID = true;
+            String variable_name = "#" + id;
+            symbolTable.put(variable_name, new SymbolContext("int", variable_name, true, id));
+            writer.println("istore " + id);
+            ctx.type = "int";
+            ctx.value = variable_name;
+
         } else if (ctx.compare_operation() != null) {
             if (ctx.term().type.equals(ctx.expr().type) && ctx.term().type.equals("int")) {
 
                 String l1 = newLabel();
                 String l2 = newLabel();
-
-                if (ctx.expr().isID) {
-                    writer.println("iload " + symbolTable.get(ctx.expr().value.toString()).varId);
-                } else {
-                    writer.println("bipush " + ctx.expr().value);
-                }
-
-                if (ctx.term().isID) {
-                    writer.println("iload " + symbolTable.get(ctx.term().value.toString()).varId);
-                } else {
-                    writer.println("bipush " + ctx.term().value);
-                }
 
                 if (ctx.compare_operation().GT() != null)
                     writer.println("if_icmple " + l1);
@@ -321,67 +275,35 @@ public class KharazmiCodeGenerator implements KharazmiListener {
     @Override
     public void exitTerm(KharazmiParser.TermContext ctx) {
         if (ctx.MUL() != null) {
-            if (ctx.term().type.equals(ctx.factor().type) && ctx.term().type.equals("int")) {
-                if (ctx.term().isID) {
-                    if (ctx.factor().isID) {
-                        writer.println("iload " + symbolTable.get(ctx.term().value.toString()).varId);
-                        writer.println("iload " + symbolTable.get(ctx.factor().value.toString()).varId);
-                        writer.println("imul");
-                    } else {
-                        writer.println("iload " + symbolTable.get(ctx.term().value.toString()).varId);
-                        writer.println("bipush " + ctx.factor().value);
-                        writer.println("imul");
-                    }
-                } else if (ctx.factor().isID) {
-                    writer.println("bipush " + ctx.term().value);
-                    writer.println("iload " + symbolTable.get(ctx.factor().value.toString()).varId);
-                    writer.println("imul");
-                } else {
-                    writer.println("bipush " + ctx.term().value);
-                    writer.println("bipush " + ctx.factor().value);
-                    writer.println("imul");
-                }
-                int id = newTemp();
-                ctx.isID = true;
-                String variable_name = "#" + id;
-                symbolTable.put(variable_name, new SymbolContext("int", variable_name, true, id));
-                writer.println("istore " + id);
-                ctx.type = "int";
-                ctx.value = variable_name;
-            } else {
+            if (!ctx.term().type.equals(ctx.factor().type) || !ctx.term().type.equals("int")) {
                 throw new RuntimeException("Can not apply operand " + ctx.MUL().getText() + " between " + ctx.term().type + " and " + ctx.factor().type);
             }
+
+            writer.println("imul");
+
+            int id = newTemp();
+            ctx.isID = true;
+            String variable_name = "#" + id;
+            symbolTable.put(variable_name, new SymbolContext("int", variable_name, true, id));
+            writer.println("istore " + id);
+            ctx.type = "int";
+            ctx.value = variable_name;
+
         } else if (ctx.DIV() != null) {
-            if (ctx.term().type.equals(ctx.factor().type) && ctx.term().type.equals("int")) {
-                if (ctx.term().isID) {
-                    if (ctx.factor().isID) {
-                        writer.println("iload " + symbolTable.get(ctx.term().value.toString()).varId);
-                        writer.println("iload " + symbolTable.get(ctx.factor().value.toString()).varId);
-                        writer.println("idiv");
-                    } else {
-                        writer.println("iload " + symbolTable.get(ctx.term().value.toString()).varId);
-                        writer.println("bipush " + ctx.factor().value);
-                        writer.println("idiv");
-                    }
-                } else if (ctx.factor().isID) {
-                    writer.println("bipush " + ctx.term().value);
-                    writer.println("iload " + symbolTable.get(ctx.factor().value.toString()).varId);
-                    writer.println("idiv");
-                } else {
-                    writer.println("bipush " + ctx.term().value);
-                    writer.println("bipush " + ctx.factor().value);
-                    writer.println("idiv");
-                }
-                int id = newTemp();
-                ctx.isID = true;
-                String variable_name = "#" + id;
-                symbolTable.put(variable_name, new SymbolContext("int", variable_name, true, id));
-                writer.println("istore " + id);
-                ctx.type = "int";
-                ctx.value = variable_name;
-            } else {
+            if (!ctx.term().type.equals(ctx.factor().type) || !ctx.term().type.equals("int")) {
                 throw new RuntimeException("Can not apply operand " + ctx.DIV().getText() + " between " + ctx.term().type + " and " + ctx.factor().type);
             }
+
+            writer.println("idiv");
+
+            int id = newTemp();
+            ctx.isID = true;
+            String variable_name = "#" + id;
+            symbolTable.put(variable_name, new SymbolContext("int", variable_name, true, id));
+            writer.println("istore " + id);
+            ctx.type = "int";
+            ctx.value = variable_name;
+
         } else {
             ctx.type = ctx.factor().type;
             ctx.isID = ctx.factor().isID;
@@ -401,6 +323,7 @@ public class KharazmiCodeGenerator implements KharazmiListener {
                 ctx.type = symbolTable.get(ctx.ID().getText()).type;
                 ctx.isID = true;
                 ctx.value = ctx.ID().getText();
+                writer.println("iload " + symbolTable.get(ctx.value.toString()).varId);
             } else {
                 throw new RuntimeException(ctx.ID().getText() + "is used before assignment");
             }
@@ -408,22 +331,27 @@ public class KharazmiCodeGenerator implements KharazmiListener {
             ctx.type = "str";
             ctx.isID = false;
             ctx.value = ctx.STRING().getText().substring(1, ctx.getText().length() - 1);
+            writer.println("ldc \"" + ctx.value+"\"");
         } else if (ctx.NUMBER() != null) {
             ctx.type = "int";
             ctx.isID = false;
             ctx.value = KharazmiHelperFunctions.ToEnglishNumber(ctx.NUMBER().getText());
+            writer.println("bipush " + ctx.value);
         } else if (ctx.TRUE() != null) {
             ctx.type = "bool";
             ctx.isID = false;
             ctx.value = "1";
+            writer.println("bipush " + ctx.value);
         } else if (ctx.FALSE() != null) {
             ctx.type = "bool";
             ctx.isID = false;
             ctx.value = "0";
+            writer.println("bipush " + ctx.value);
         } else {
             ctx.type = ctx.expr().type;
             ctx.isID = ctx.expr().isID;
             ctx.value = ctx.expr().value;
+            writer.println("bipush " + ctx.value);
         }
     }
 
