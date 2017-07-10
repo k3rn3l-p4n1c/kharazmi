@@ -138,6 +138,26 @@ public interface KharazmiListener extends ParseTreeListener {
 	 */
 	void exitFactor(KharazmiParser.FactorContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link KharazmiParser#or_term}.
+	 * @param ctx the parse tree
+	 */
+	void enterOr_term(KharazmiParser.Or_termContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link KharazmiParser#or_term}.
+	 * @param ctx the parse tree
+	 */
+	void exitOr_term(KharazmiParser.Or_termContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link KharazmiParser#and_factor}.
+	 * @param ctx the parse tree
+	 */
+	void enterAnd_factor(KharazmiParser.And_factorContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link KharazmiParser#and_factor}.
+	 * @param ctx the parse tree
+	 */
+	void exitAnd_factor(KharazmiParser.And_factorContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link KharazmiParser#compare_operation}.
 	 * @param ctx the parse tree
 	 */

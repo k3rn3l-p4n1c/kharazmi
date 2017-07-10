@@ -22,38 +22,47 @@
 .end method
 
 .method public static main([Ljava/lang/String;)V
-  .limit stack 2
-  .limit locals 3
-  .line 6
+  .limit stack 1
+  .limit locals 4
+  .line 5
   0: iconst_0
-  1: istore_2
-Label2:
-  2: iload_2
-  3: bipush 10
-  5: if_icmple Label22
-  .line 7
-  8: getstatic java/lang/System/out Ljava/io/PrintStream;
-  11: ldc "Hello"
-  13: invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V
+  1: istore_1
   .line 6
-  16: iinc 2 1
-  19: goto Label2
-Label22:
-  .line 9
-  22: return
+  2: iconst_1
+  3: istore_2
+  .line 8
+
+
+  4: iload_1
+  5: ifeq Label16
+  8: iload_2
+  9: ifeq Label16
+  12: iconst_1
+  13: goto Label17
+Label16:
+  16: iconst_0
+Label17:
+  17: istore_3
+  .line 11
+
+
+  18: return
   ; append_frame (frameNumber = 0)
-  ; frame_type = 253, offset_delta = 2
-  ; frame bytes: 253 0 2 0 1 
+  ; frame_type = 253, offset_delta = 16
+  ; frame bytes: 253 0 16 1 1 
   .stack 
-    offset 2
-    locals Top
+    offset 16
+    locals Integer
     locals Integer
     .end stack
-  ; chop_frame (frameNumber = 1)
-  ; frame_type = 249, offset_delta = 19
-  ; frame bytes: 249 0 19 
+  ; same_locals_1_stack_item_frame (frameNumber = 1)
+  ; frame_type = 64, offset_delta = 0
+  ; frame bytes: 64 1 
   .stack 
-    offset 22
+    offset 17
+    locals Integer
+    locals Integer
+    stack Integer
     .end stack
 .end method
 

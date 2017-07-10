@@ -55,14 +55,14 @@ expr returns[String type, Object value, boolean isID]:
     | methodCall
     | expr ADD term
     | expr SUB term
-    | expr OR term
+    | expr or_term
     | expr compare_operation term
     | term;
 
 term returns[String type, Object value, boolean isID]:
     term MUL factor
     | term DIV factor
-    | term AND factor
+    | term and_factor
     | factor;
 
 factor returns[String type, Object value, boolean isID]:
@@ -72,6 +72,9 @@ factor returns[String type, Object value, boolean isID]:
     | NUMBER
     | STRING
     | '(' expr ')';
+
+or_term returns[String l_1, String l_0, String l_end]: OR term;
+and_factor returns[String l_0, String l_end]: AND factor;
 
 compare_operation: GT | LT | EQUAL | GT_EQUAL | LT_EQUAL;
 

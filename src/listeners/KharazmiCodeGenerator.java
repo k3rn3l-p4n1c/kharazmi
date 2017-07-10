@@ -228,11 +228,12 @@ public class KharazmiCodeGenerator implements KharazmiListener {
             } else {
                 throw new RuntimeException("Can not apply operand " + ctx.compare_operation().getText() + " between " + ctx.expr().type + " and " + ctx.term().type);
             }
-        } else if (ctx.OR() != null) {
-            if (ctx.term().type.equals(ctx.expr().type) && ctx.term().type.equals("bool")) {
-
+        } else if (ctx.or_term() != null) {
+            if (ctx.or_term().term().type.equals(ctx.expr().type) && ctx.expr().type.equals("bool")) {
+                // codes in or_term
+                ctx.type = "bool";
             } else {
-                throw new RuntimeException("Can not apply operand " + ctx.SUB().getText() + " between " + ctx.expr().type + " and " + ctx.term().type);
+                throw new RuntimeException("Can not apply operand " + ctx.or_term().OR().getText() + " between " + ctx.expr().type + " and " + ctx.term().type);
             }
         } else if (ctx.term() != null) {
             ctx.type = ctx.term().type;
@@ -255,14 +256,21 @@ public class KharazmiCodeGenerator implements KharazmiListener {
             if (!ctx.term().type.equals(ctx.factor().type) || !ctx.term().type.equals("int")) {
                 throw new RuntimeException("Can not apply operand " + ctx.MUL().getText() + " between " + ctx.term().type + " and " + ctx.factor().type);
             }
-
+            ctx.type = "int";
             writer.println("imul");
         } else if (ctx.DIV() != null) {
             if (!ctx.term().type.equals(ctx.factor().type) || !ctx.term().type.equals("int")) {
                 throw new RuntimeException("Can not apply operand " + ctx.DIV().getText() + " between " + ctx.term().type + " and " + ctx.factor().type);
             }
-
+            ctx.type = "int";
             writer.println("idiv");
+        } else if (ctx.and_factor() != null) {
+            if (ctx.term().type.equals(ctx.and_factor().factor().type) && ctx.term().type.equals("bool")) {
+                // codes in and_factor
+                ctx.type = "bool";
+            } else {
+                throw new RuntimeException("Can not apply operand " + ctx.and_factor().AND().getText() + " between " + ctx.term().type + " and " + ctx.factor().type);
+            }
         } else {
             ctx.type = ctx.factor().type;
             ctx.isID = ctx.factor().isID;
@@ -312,6 +320,44 @@ public class KharazmiCodeGenerator implements KharazmiListener {
             ctx.value = ctx.expr().value;
             writer.println("bipush " + ctx.value);
         }
+    }
+
+    @Override
+    public void enterOr_term(KharazmiParser.Or_termContext ctx) {
+        ctx.l_0 = newLabel();
+        ctx.l_1 = newLabel();
+        ctx.l_end = newLabel();
+
+        writer.println("ifne " + ctx.l_1);
+    }
+
+    @Override
+    public void exitOr_term(KharazmiParser.Or_termContext ctx) {
+        writer.println("ifeq " + ctx.l_0);
+        writer.println(ctx.l_1+":");
+        writer.println("iconst_1");
+        writer.println("goto "+ctx.l_end);
+        writer.println(ctx.l_0+":");
+        writer.println("iconst_0");
+        writer.println(ctx.l_end+":");
+    }
+
+    @Override
+    public void enterAnd_factor(KharazmiParser.And_factorContext ctx) {
+        ctx.l_0 = newLabel();
+        ctx.l_end = newLabel();
+
+        writer.println("ifeq " + ctx.l_0);
+    }
+
+    @Override
+    public void exitAnd_factor(KharazmiParser.And_factorContext ctx) {
+        writer.println("ifeq " + ctx.l_0);
+        writer.println("iconst_1");
+        writer.println("goto "+ctx.l_end);
+        writer.println(ctx.l_0+":");
+        writer.println("iconst_0");
+        writer.println(ctx.l_end+":");
     }
 
     @Override

@@ -89,6 +89,18 @@ public interface KharazmiVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitFactor(KharazmiParser.FactorContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link KharazmiParser#or_term}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitOr_term(KharazmiParser.Or_termContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link KharazmiParser#and_factor}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAnd_factor(KharazmiParser.And_factorContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link KharazmiParser#compare_operation}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
