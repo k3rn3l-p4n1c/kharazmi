@@ -15,7 +15,6 @@ statement:
     | foreachStatement
     | returnStatement // TODO: remove, blocks outside functions cannot return something.
     | functionCall DOT
-//    | getAttr
     | methodCall
     | subjectiveFunctionCall
     ;
@@ -199,7 +198,4 @@ ID: ('\u0620'..'\u06EF')('\u0620'..'\u06FF' | '‌' | '0'..'9')*;
 NUMBER: ('\u06F1'.. '\u06F9')('\u06F0'.. '\u06F9')* | ('1'..'9')('0'..'9')*;
 STRING: '«' .+? '»' | '»' .+? '«';
 
-//NEWLINE: '\n';
-//WS: ' ';
-//WS : [ \t\r\n]+ -> skip ;
 WS : [ \t\n\r]+ -> channel(HIDDEN) ;

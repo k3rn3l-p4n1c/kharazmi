@@ -23,26 +23,48 @@ import java.util.jar.Manifest;
 public class Kharazmi {
 
     public static void main(String[] args) throws IOException {
-//        generateJasminCode( "samples/1_print.kh");
-//        generateJasminCode( "samples/2_variable.kh");
-//        generateJasminCode( "samples/3_bool_expresion.kh");
-//        generateJasminCode( "samples/3_expresion.kh");
-//        generateJasminCode( "samples/4_bool_operator.kh");
-//        generateJasminCode( "samples/4_if.kh");
-//        generateJasminCode( "samples/5_repeat.kh");
-//        generateJasminCode( "samples/6_foreach.kh");
-//        generateJasminCode( "samples/7_while.kh");
-        generateJasminCode( "samples/8_function.kh");
-        compileJVMClass();
+        String outputName = "KharazmiProgram";
+        String inputPath = null;
+        for (int i = 0; i < args.length; i++) {
+            switch (args[i]) {
+                case "--help":
+                case "-h":
+                    System.out.println("usage: Scrawl [--output <output name>] <file> \n");
+                    return;
+                case "--ouput":
+                case "-o":
+                    i++;
+                    outputName = args[i];
+                    break;
+                default:
+                    inputPath = args[i];
+            }
+        }
+
+        if (inputPath == null) {
+            System.out.println("No .kh file is specified");
+            System.out.println("usage: Scrawl [--output <output name>] <file> \n");
+            return;
+        }
+        String jasminPath = generateJasminCode(inputPath, outputName);
+        if (jasminPath != null) {
+            assembleJasmin(jasminPath);
+            generateJarFile(outputName);
+        }
     }
 
-    private static void generateJasminCode(String fileName) throws IOException {
-
+    private static String generateJasminCode(String fileName, String outputName) throws IOException {
         File file = new File(fileName);
         FileInputStream fis;
 
-        // Open the input file stream
-        fis = new FileInputStream(file);
+        try {
+            // Open the input file stream
+            fis = new FileInputStream(file);
+        } catch (FileNotFoundException e) {
+            System.out.println(fileName + " was not found.");
+            return null;
+        }
+        System.out.print("Compiling...");
 
         // Create a CharStream that reads from standard input
         ANTLRInputStream input = new ANTLRInputStream(fis);
@@ -64,34 +86,38 @@ public class Kharazmi {
         // Close the input file
         fis.close();
 
-        String outputName = "temp_jasmin";
+        URL location = Main.class.getProtectionDomain().getCodeSource().getLocation();
+        URL jasmin_path = new URL(location, "../" + outputName + ".j");
+        PrintWriter writer = new PrintWriter(jasmin_path.getPath(), "UTF-8");
 
-        try {
-            URL location = Main.class.getProtectionDomain().getCodeSource().getLocation();
-            URL jasmin_path = new URL(location, "../" + outputName + ".j");
-            System.out.println("Jasmin created in: " + jasmin_path);
-            PrintWriter writer = new PrintWriter(jasmin_path.getPath(), "UTF-8");
+        ParseTreeWalker walker = new ParseTreeWalker();
+        walker.walk(new KharazmiBaseListener(), tree);
+        KharazmiCodeGenerator kharazmiCodeGenerator = new KharazmiCodeGenerator(writer);
+        walker.walk(kharazmiCodeGenerator, tree);
 
-            ParseTreeWalker walker = new ParseTreeWalker();
-            walker.walk(new KharazmiBaseListener(), tree);
-            KharazmiCodeGenerator kharazmiCodeGenerator = new KharazmiCodeGenerator(writer);
-            walker.walk(kharazmiCodeGenerator, tree);
+        writer.close();
+        System.out.println(" Done");
 
-            writer.close();
-
-            (new Main()).assemble(jasmin_path.getPath());
-        } catch (FileNotFoundException | UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        return jasmin_path.getPath();
     }
 
-    static void compileJVMClass() throws IOException {
+    static void assembleJasmin(String path) {
+        System.out.println("Assembling...");
+        (new Main()).assemble(path);
+    }
+
+    static void generateJarFile(String outputName) throws IOException {
+        System.out.print("Generating output...");
+
         Manifest manifest = new Manifest();
         manifest.getMainAttributes().put(Attributes.Name.MANIFEST_VERSION, "1.0");
         manifest.getMainAttributes().put(Attributes.Name.MAIN_CLASS, "KharazmiProgram");
-        JarOutputStream target = new JarOutputStream(new FileOutputStream("KharazmiProgram.jar"), manifest);
+        JarOutputStream target = new JarOutputStream(new FileOutputStream(outputName + ".jar"), manifest);
         add(new File("KharazmiProgram.class"), target);
         target.close();
+        System.out.println(" Done");
+        System.out.println("Generated: " + outputName + ".jar");
+
     }
 
     private static void add(File source, JarOutputStream target) throws IOException {
