@@ -10,18 +10,15 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 
-/**
- * Created by Bardia on 3/10/17.
- */
 public class KharazmiCodeGenerator implements KharazmiListener {
 
     class SymbolContext {
-        public String type;
-        public String name;
-        public boolean isTemp;
-        public int varId;
+        String type;
+        String name;
+        boolean isTemp;
+        int varId;
 
-        public SymbolContext(String type, String name, boolean isTemp, int varId) {
+        SymbolContext(String type, String name, boolean isTemp, int varId) {
             this.type = type;
             this.name = name;
             this.isTemp = isTemp;
@@ -29,7 +26,7 @@ public class KharazmiCodeGenerator implements KharazmiListener {
         }
     }
 
-    HashMap<String, SymbolContext> symbolTable;
+    private HashMap<String, SymbolContext> symbolTable;
     public String bytecode = "";
 
 
@@ -38,7 +35,7 @@ public class KharazmiCodeGenerator implements KharazmiListener {
         tempSet = new HashSet<>();
     }
 
-    HashSet<Integer> tempSet;
+    private HashSet<Integer> tempSet;
 
     private boolean isTemp(int id) {
         return tempSet.contains(id);
@@ -156,7 +153,7 @@ public class KharazmiCodeGenerator implements KharazmiListener {
         String variable_name = ctx.ID().getSymbol().getText();
         String variable_type = ctx.expr().type;
         if (symbolTable.containsKey(variable_name)) {
-            if (!symbolTable.get(variable_name).equals(variable_type)) {
+            if (!symbolTable.get(variable_name).type.equals(variable_type)) {
                 throw new RuntimeException(variable_name + " except " + symbolTable.get(variable_name) + " but it got " + variable_type);
             }
 
@@ -164,7 +161,7 @@ public class KharazmiCodeGenerator implements KharazmiListener {
             int id = newVarId();
             symbolTable.put(variable_name, new SymbolContext(variable_type, variable_name, false, id));
             if (ctx.expr().isID)
-                bytecode += "iload " + symbolTable.get((String) ctx.expr().value).varId + "\n" +
+                bytecode += "iload " + symbolTable.get(ctx.expr().value.toString()).varId + "\n" +
                         "istore " + id + "\n";
             else
                 bytecode += "bipush " + ctx.expr().value + "\n" +
@@ -193,17 +190,17 @@ public class KharazmiCodeGenerator implements KharazmiListener {
             if (ctx.term().type.equals(ctx.expr().type) && ctx.term().type.equals("int")) {
                 if (ctx.expr().isID) {
                     if (ctx.term().isID) {
-                        bytecode += "iload " + symbolTable.get((String) ctx.expr().value).varId + "\n" +
-                                "iload " + symbolTable.get((String) ctx.term().value).varId + "\n" +
+                        bytecode += "iload " + symbolTable.get(ctx.expr().value.toString()).varId + "\n" +
+                                "iload " + symbolTable.get(ctx.term().value.toString()).varId + "\n" +
                                 "iadd\n";
                     } else {
-                        bytecode += "iload " + symbolTable.get((String) ctx.expr().value).varId + "\n" +
+                        bytecode += "iload " + symbolTable.get(ctx.expr().value.toString()).varId + "\n" +
                                 "bipush " + ctx.term().value + "\n" +
                                 "iadd\n";
                     }
                 } else if (ctx.term().isID) {
                     bytecode += "bipush " + ctx.expr().value + "\n" +
-                            "iload " + symbolTable.get((String) ctx.term().value).varId + "\n" +
+                            "iload " + symbolTable.get(ctx.term().value.toString()).varId + "\n" +
                             "iadd\n";
                 } else {
                     bytecode += "bipush " + ctx.expr().value + "\n" +
@@ -224,17 +221,17 @@ public class KharazmiCodeGenerator implements KharazmiListener {
             if (ctx.term().type.equals(ctx.expr().type) && ctx.term().type.equals("int")) {
                 if (ctx.expr().isID) {
                     if (ctx.term().isID) {
-                        bytecode += "iload " + symbolTable.get((String) ctx.expr().value).varId + "\n" +
-                                "iload " + symbolTable.get((String) ctx.term().value).varId + "\n" +
+                        bytecode += "iload " + symbolTable.get(ctx.expr().value.toString()).varId + "\n" +
+                                "iload " + symbolTable.get(ctx.term().value.toString()).varId + "\n" +
                                 "isub\n";
                     } else {
-                        bytecode += "iload " + symbolTable.get((String) ctx.expr().value).varId + "\n" +
+                        bytecode += "iload " + symbolTable.get(ctx.expr().value.toString()).varId + "\n" +
                                 "bipush " + ctx.term().value + "\n" +
                                 "isub\n";
                     }
                 } else if (ctx.term().isID) {
                     bytecode += "bipush " + ctx.expr().value + "\n" +
-                            "iload " + symbolTable.get((String) ctx.term().value).varId + "\n" +
+                            "iload " + symbolTable.get(ctx.term().value.toString()).varId + "\n" +
                             "isub\n";
                 } else {
                     bytecode += "bipush " + ctx.expr().value + "\n" +
@@ -258,13 +255,13 @@ public class KharazmiCodeGenerator implements KharazmiListener {
                 String l2 = newLabel();
 
                 if (ctx.expr().isID) {
-                    bytecode += "iload " + symbolTable.get((String) ctx.expr().value).varId + "\n";
+                    bytecode += "iload " + symbolTable.get(ctx.expr().value.toString()).varId + "\n";
                 } else {
                     bytecode += "bipush " + ctx.expr().value + "\n";
                 }
 
                 if (ctx.term().isID) {
-                    bytecode += "iload " + symbolTable.get((String) ctx.term().value).varId + "\n";
+                    bytecode += "iload " + symbolTable.get(ctx.term().value.toString()).varId + "\n";
                 } else {
                     bytecode += "bipush " + ctx.term().value + "\n";
                 }
@@ -324,17 +321,17 @@ public class KharazmiCodeGenerator implements KharazmiListener {
             if (ctx.term().type.equals(ctx.factor().type) && ctx.term().type.equals("int")) {
                 if (ctx.term().isID) {
                     if (ctx.factor().isID) {
-                        bytecode += "iload " + symbolTable.get((String) ctx.term().value).varId + "\n" +
-                                "iload " + symbolTable.get((String) ctx.factor().value).varId + "\n" +
+                        bytecode += "iload " + symbolTable.get(ctx.term().value.toString()).varId + "\n" +
+                                "iload " + symbolTable.get(ctx.factor().value.toString()).varId + "\n" +
                                 "imul\n";
                     } else {
-                        bytecode += "iload " + symbolTable.get((String) ctx.term().value).varId + "\n" +
+                        bytecode += "iload " + symbolTable.get(ctx.term().value.toString()).varId + "\n" +
                                 "bipush " + ctx.factor().value + "\n" +
                                 "imul\n";
                     }
                 } else if (ctx.factor().isID) {
                     bytecode += "bipush " + ctx.term().value + "\n" +
-                            "iload " + symbolTable.get((String) ctx.factor().value).varId + "\n" +
+                            "iload " + symbolTable.get(ctx.factor().value.toString()).varId + "\n" +
                             "imul\n";
                 } else {
                     bytecode += "bipush " + ctx.term().value + "\n" +
@@ -355,17 +352,17 @@ public class KharazmiCodeGenerator implements KharazmiListener {
             if (ctx.term().type.equals(ctx.factor().type) && ctx.term().type.equals("int")) {
                 if (ctx.term().isID) {
                     if (ctx.factor().isID) {
-                        bytecode += "iload " + symbolTable.get((String) ctx.term().value).varId + "\n" +
-                                "iload " + symbolTable.get((String) ctx.factor().value).varId + "\n" +
+                        bytecode += "iload " + symbolTable.get(ctx.term().value.toString()).varId + "\n" +
+                                "iload " + symbolTable.get(ctx.factor().value.toString()).varId + "\n" +
                                 "idiv\n";
                     } else {
-                        bytecode += "iload " + symbolTable.get((String) ctx.term().value).varId + "\n" +
+                        bytecode += "iload " + symbolTable.get(ctx.term().value.toString()).varId + "\n" +
                                 "bipush " + ctx.factor().value + "\n" +
                                 "idiv\n";
                     }
                 } else if (ctx.factor().isID) {
                     bytecode += "bipush " + ctx.term().value + "\n" +
-                            "iload " + symbolTable.get((String) ctx.factor().value).varId + "\n" +
+                            "iload " + symbolTable.get(ctx.factor().value.toString()).varId + "\n" +
                             "idiv\n";
                 } else {
                     bytecode += "bipush " + ctx.term().value + "\n" +
