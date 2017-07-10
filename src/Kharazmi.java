@@ -53,13 +53,6 @@ public class Kharazmi {
         // Close the input file
         fis.close();
 
-        ParseTreeWalker walker = new ParseTreeWalker();
-        walker.walk(new KharazmiBaseListener(), tree);
-        KharazmiCodeGenerator kharazmiCodeGenerator = new KharazmiCodeGenerator();
-        walker.walk(kharazmiCodeGenerator, tree);
-
-
-
         String outputName = "temp_jasmin";
 
         try {
@@ -67,7 +60,12 @@ public class Kharazmi {
             URL jasmin_path = new URL(location,"../"+outputName+".j");
             System.out.println("Jasmin created in: "+jasmin_path);
             PrintWriter writer = new PrintWriter(jasmin_path.getPath(), "UTF-8");
-            writer.print(kharazmiCodeGenerator.bytecode);
+
+            ParseTreeWalker walker = new ParseTreeWalker();
+            walker.walk(new KharazmiBaseListener(), tree);
+            KharazmiCodeGenerator kharazmiCodeGenerator = new KharazmiCodeGenerator(writer);
+            walker.walk(kharazmiCodeGenerator, tree);
+
             writer.close();
 
             (new Main()).assemble(jasmin_path.getPath());

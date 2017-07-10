@@ -6,6 +6,7 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 import parser.KharazmiListener;
 import parser.KharazmiParser;
 
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -27,12 +28,13 @@ public class KharazmiCodeGenerator implements KharazmiListener {
     }
 
     private HashMap<String, SymbolContext> symbolTable;
-    public String bytecode = "";
+    private PrintWriter writer;
 
 
-    public KharazmiCodeGenerator() {
+    public KharazmiCodeGenerator(PrintWriter writer) {
         symbolTable = new HashMap<>();
         tempSet = new HashSet<>();
+        this.writer = writer;
     }
 
     private HashSet<Integer> tempSet;
@@ -61,12 +63,12 @@ public class KharazmiCodeGenerator implements KharazmiListener {
 
     @Override
     public void enterProg(KharazmiParser.ProgContext ctx) {
-        bytecode += KharazmiHelperFunctions.JasminPrefix();
+        writer.print(KharazmiHelperFunctions.JasminPrefix());
     }
 
     @Override
     public void exitProg(KharazmiParser.ProgContext ctx) {
-        bytecode += KharazmiHelperFunctions.JasminPostfix();
+        writer.print(KharazmiHelperFunctions.JasminPostfix());
     }
 
     @Override
@@ -97,7 +99,7 @@ public class KharazmiCodeGenerator implements KharazmiListener {
     @Override
     public void exitSubjectiveFunctionCall(KharazmiParser.SubjectiveFunctionCallContext ctx) {
         if (ctx.PRINT_FUNCTION() != null) {
-            bytecode += KharazmiHelperFunctions.PrintFunctionCall(ctx.expr(), symbolTable);
+            writer.print(KharazmiHelperFunctions.PrintFunctionCall(ctx.expr(), symbolTable));
         } else {
             // TODO: call function ctx.ID()
         }
@@ -160,12 +162,13 @@ public class KharazmiCodeGenerator implements KharazmiListener {
         } else {
             int id = newVarId();
             symbolTable.put(variable_name, new SymbolContext(variable_type, variable_name, false, id));
-            if (ctx.expr().isID)
-                bytecode += "iload " + symbolTable.get(ctx.expr().value.toString()).varId + "\n" +
-                        "istore " + id + "\n";
-            else
-                bytecode += "bipush " + ctx.expr().value + "\n" +
-                        "istore " + id + "\n";
+            if (ctx.expr().isID) {
+                writer.println("iload " + symbolTable.get(ctx.expr().value.toString()).varId);
+                writer.println("istore " + id);
+            } else {
+                writer.println("bipush " + ctx.expr().value);
+                writer.println("istore " + id);
+            }
         }
     }
 
@@ -190,28 +193,28 @@ public class KharazmiCodeGenerator implements KharazmiListener {
             if (ctx.term().type.equals(ctx.expr().type) && ctx.term().type.equals("int")) {
                 if (ctx.expr().isID) {
                     if (ctx.term().isID) {
-                        bytecode += "iload " + symbolTable.get(ctx.expr().value.toString()).varId + "\n" +
-                                "iload " + symbolTable.get(ctx.term().value.toString()).varId + "\n" +
-                                "iadd\n";
+                        writer.println("iload " + symbolTable.get(ctx.expr().value.toString()).varId);
+                        writer.println("iload " + symbolTable.get(ctx.term().value.toString()).varId);
+                        writer.println("iadd");
                     } else {
-                        bytecode += "iload " + symbolTable.get(ctx.expr().value.toString()).varId + "\n" +
-                                "bipush " + ctx.term().value + "\n" +
-                                "iadd\n";
+                        writer.println("iload " + symbolTable.get(ctx.expr().value.toString()).varId);
+                        writer.println("bipush " + ctx.term().value);
+                        writer.println("iadd");
                     }
                 } else if (ctx.term().isID) {
-                    bytecode += "bipush " + ctx.expr().value + "\n" +
-                            "iload " + symbolTable.get(ctx.term().value.toString()).varId + "\n" +
-                            "iadd\n";
+                    writer.println("bipush " + ctx.expr().value);
+                    writer.println("iload " + symbolTable.get(ctx.term().value.toString()).varId);
+                    writer.println("iadd");
                 } else {
-                    bytecode += "bipush " + ctx.expr().value + "\n" +
-                            "bipush " + ctx.term().value + "\n" +
-                            "iadd\n";
+                    writer.println("bipush " + ctx.expr().value);
+                    writer.println("bipush " + ctx.term().value);
+                    writer.println("iadd");
                 }
                 int id = newTemp();
                 ctx.isID = true;
                 String variable_name = "#" + id;
                 symbolTable.put(variable_name, new SymbolContext("int", variable_name, true, id));
-                bytecode += "istore " + id + "\n";
+                writer.println("istore " + id);
                 ctx.type = "int";
                 ctx.value = variable_name;
             } else {
@@ -221,28 +224,28 @@ public class KharazmiCodeGenerator implements KharazmiListener {
             if (ctx.term().type.equals(ctx.expr().type) && ctx.term().type.equals("int")) {
                 if (ctx.expr().isID) {
                     if (ctx.term().isID) {
-                        bytecode += "iload " + symbolTable.get(ctx.expr().value.toString()).varId + "\n" +
-                                "iload " + symbolTable.get(ctx.term().value.toString()).varId + "\n" +
-                                "isub\n";
+                        writer.println("iload " + symbolTable.get(ctx.expr().value.toString()).varId);
+                        writer.println("iload " + symbolTable.get(ctx.term().value.toString()).varId);
+                        writer.println("isub");
                     } else {
-                        bytecode += "iload " + symbolTable.get(ctx.expr().value.toString()).varId + "\n" +
-                                "bipush " + ctx.term().value + "\n" +
-                                "isub\n";
+                        writer.println("iload " + symbolTable.get(ctx.expr().value.toString()).varId);
+                        writer.println("bipush " + ctx.term().value);
+                        writer.println("isub");
                     }
                 } else if (ctx.term().isID) {
-                    bytecode += "bipush " + ctx.expr().value + "\n" +
-                            "iload " + symbolTable.get(ctx.term().value.toString()).varId + "\n" +
-                            "isub\n";
+                    writer.println("bipush " + ctx.expr().value);
+                    writer.println("iload " + symbolTable.get(ctx.term().value.toString()).varId);
+                    writer.println("isub");
                 } else {
-                    bytecode += "bipush " + ctx.expr().value + "\n" +
-                            "bipush " + ctx.term().value + "\n" +
-                            "isub\n";
+                    writer.println("bipush " + ctx.expr().value);
+                    writer.println("bipush " + ctx.term().value);
+                    writer.println("isub");
                 }
                 int id = newTemp();
                 ctx.isID = true;
                 String variable_name = "#" + id;
                 symbolTable.put(variable_name, new SymbolContext("int", variable_name, true, id));
-                bytecode += "istore " + id + "\n";
+                writer.println("istore " + id);
                 ctx.type = "int";
                 ctx.value = variable_name;
             } else {
@@ -255,39 +258,39 @@ public class KharazmiCodeGenerator implements KharazmiListener {
                 String l2 = newLabel();
 
                 if (ctx.expr().isID) {
-                    bytecode += "iload " + symbolTable.get(ctx.expr().value.toString()).varId + "\n";
+                    writer.println("iload " + symbolTable.get(ctx.expr().value.toString()).varId);
                 } else {
-                    bytecode += "bipush " + ctx.expr().value + "\n";
+                    writer.println("bipush " + ctx.expr().value);
                 }
 
                 if (ctx.term().isID) {
-                    bytecode += "iload " + symbolTable.get(ctx.term().value.toString()).varId + "\n";
+                    writer.println("iload " + symbolTable.get(ctx.term().value.toString()).varId);
                 } else {
-                    bytecode += "bipush " + ctx.term().value + "\n";
+                    writer.println("bipush " + ctx.term().value);
                 }
 
                 if (ctx.compare_operation().GT() != null)
-                    bytecode += "if_icmple " + l1 + "\n";
+                    writer.println("if_icmple " + l1);
                 else if (ctx.compare_operation().GT_EQUAL() != null)
-                    bytecode += "if_icmplt " + l1 + "\n";
+                    writer.println("if_icmplt " + l1);
                 else if (ctx.compare_operation().LT() != null)
-                    bytecode += "if_icmpge " + l1 + "\n";
+                    writer.println("if_icmpge " + l1);
                 else if (ctx.compare_operation().LT_EQUAL() != null)
-                    bytecode += "if_icmpgt " + l1 + "\n";
+                    writer.println("if_icmpgt " + l1);
                 else if (ctx.compare_operation().EQUAL() != null)
-                    bytecode += "if_icmpne " + l1 + "\n";
+                    writer.println("if_icmpne " + l1);
 
-                bytecode += "iconst_1\n";
-                bytecode += "goto " + l2 + "\n";
-                bytecode += l1 + ": \n";
-                bytecode += "iconst_0\n";
-                bytecode += l2 + ": \n";
+                writer.println("iconst_1");
+                writer.println("goto " + l2);
+                writer.println(l1 + ":");
+                writer.println("iconst_0");
+                writer.println(l2 + ":");
 
                 int id = newTemp();
                 ctx.isID = true;
                 String variable_name = "#" + id;
                 symbolTable.put(variable_name, new SymbolContext("int", variable_name, true, id));
-                bytecode += "istore " + id + "\n";
+                writer.println("istore " + id);
                 ctx.type = "bool";
                 ctx.value = variable_name;
 
@@ -321,28 +324,28 @@ public class KharazmiCodeGenerator implements KharazmiListener {
             if (ctx.term().type.equals(ctx.factor().type) && ctx.term().type.equals("int")) {
                 if (ctx.term().isID) {
                     if (ctx.factor().isID) {
-                        bytecode += "iload " + symbolTable.get(ctx.term().value.toString()).varId + "\n" +
-                                "iload " + symbolTable.get(ctx.factor().value.toString()).varId + "\n" +
-                                "imul\n";
+                        writer.println("iload " + symbolTable.get(ctx.term().value.toString()).varId);
+                        writer.println("iload " + symbolTable.get(ctx.factor().value.toString()).varId);
+                        writer.println("imul");
                     } else {
-                        bytecode += "iload " + symbolTable.get(ctx.term().value.toString()).varId + "\n" +
-                                "bipush " + ctx.factor().value + "\n" +
-                                "imul\n";
+                        writer.println("iload " + symbolTable.get(ctx.term().value.toString()).varId);
+                        writer.println("bipush " + ctx.factor().value);
+                        writer.println("imul");
                     }
                 } else if (ctx.factor().isID) {
-                    bytecode += "bipush " + ctx.term().value + "\n" +
-                            "iload " + symbolTable.get(ctx.factor().value.toString()).varId + "\n" +
-                            "imul\n";
+                    writer.println("bipush " + ctx.term().value);
+                    writer.println("iload " + symbolTable.get(ctx.factor().value.toString()).varId);
+                    writer.println("imul");
                 } else {
-                    bytecode += "bipush " + ctx.term().value + "\n" +
-                            "bipush " + ctx.factor().value + "\n" +
-                            "imul\n";
+                    writer.println("bipush " + ctx.term().value);
+                    writer.println("bipush " + ctx.factor().value);
+                    writer.println("imul");
                 }
                 int id = newTemp();
                 ctx.isID = true;
                 String variable_name = "#" + id;
                 symbolTable.put(variable_name, new SymbolContext("int", variable_name, true, id));
-                bytecode += "istore " + id + "\n";
+                writer.println("istore " + id);
                 ctx.type = "int";
                 ctx.value = variable_name;
             } else {
@@ -352,28 +355,28 @@ public class KharazmiCodeGenerator implements KharazmiListener {
             if (ctx.term().type.equals(ctx.factor().type) && ctx.term().type.equals("int")) {
                 if (ctx.term().isID) {
                     if (ctx.factor().isID) {
-                        bytecode += "iload " + symbolTable.get(ctx.term().value.toString()).varId + "\n" +
-                                "iload " + symbolTable.get(ctx.factor().value.toString()).varId + "\n" +
-                                "idiv\n";
+                        writer.println("iload " + symbolTable.get(ctx.term().value.toString()).varId);
+                        writer.println("iload " + symbolTable.get(ctx.factor().value.toString()).varId);
+                        writer.println("idiv");
                     } else {
-                        bytecode += "iload " + symbolTable.get(ctx.term().value.toString()).varId + "\n" +
-                                "bipush " + ctx.factor().value + "\n" +
-                                "idiv\n";
+                        writer.println("iload " + symbolTable.get(ctx.term().value.toString()).varId);
+                        writer.println("bipush " + ctx.factor().value);
+                        writer.println("idiv");
                     }
                 } else if (ctx.factor().isID) {
-                    bytecode += "bipush " + ctx.term().value + "\n" +
-                            "iload " + symbolTable.get(ctx.factor().value.toString()).varId + "\n" +
-                            "idiv\n";
+                    writer.println("bipush " + ctx.term().value);
+                    writer.println("iload " + symbolTable.get(ctx.factor().value.toString()).varId);
+                    writer.println("idiv");
                 } else {
-                    bytecode += "bipush " + ctx.term().value + "\n" +
-                            "bipush " + ctx.factor().value + "\n" +
-                            "idiv\n";
+                    writer.println("bipush " + ctx.term().value);
+                    writer.println("bipush " + ctx.factor().value);
+                    writer.println("idiv");
                 }
                 int id = newTemp();
                 ctx.isID = true;
                 String variable_name = "#" + id;
                 symbolTable.put(variable_name, new SymbolContext("int", variable_name, true, id));
-                bytecode += "istore " + id + "\n";
+                writer.println("istore " + id);
                 ctx.type = "int";
                 ctx.value = variable_name;
             } else {
