@@ -191,6 +191,12 @@ public interface KharazmiVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitForeachStatement(KharazmiParser.ForeachStatementContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link KharazmiParser#foreach_to_expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitForeach_to_expr(KharazmiParser.Foreach_to_exprContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link KharazmiParser#returnStatement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

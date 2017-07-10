@@ -23,47 +23,26 @@
 
 .method public static main([Ljava/lang/String;)V
   .limit stack 1
-  .limit locals 4
+  .limit locals 6
   .line 5
-  0: iconst_0
+  0: iconst_1
   1: istore_1
   .line 6
   2: iconst_1
   3: istore_2
+  .line 7
+  4: iconst_1
+  5: istore_3
   .line 8
-
-
-  4: iload_1
-  5: ifeq Label16
-  8: iload_2
-  9: ifeq Label16
-  12: iconst_1
-  13: goto Label17
-Label16:
-  16: iconst_0
-Label17:
-  17: istore_3
+  6: iconst_1
+  7: istore 4
+  .line 9
+  9: iconst_1
+  10: istore 5
   .line 11
-
-
-  18: return
-  ; append_frame (frameNumber = 0)
-  ; frame_type = 253, offset_delta = 16
-  ; frame bytes: 253 0 16 1 1 
-  .stack 
-    offset 16
-    locals Integer
-    locals Integer
-    .end stack
-  ; same_locals_1_stack_item_frame (frameNumber = 1)
-  ; frame_type = 64, offset_delta = 0
-  ; frame bytes: 64 1 
-  .stack 
-    offset 17
-    locals Integer
-    locals Integer
-    stack Integer
-    .end stack
+  12: iinc 3 1
+  .line 13
+  15: return
 .end method
 
 

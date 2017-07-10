@@ -308,6 +308,16 @@ public interface KharazmiListener extends ParseTreeListener {
 	 */
 	void exitForeachStatement(KharazmiParser.ForeachStatementContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link KharazmiParser#foreach_to_expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterForeach_to_expr(KharazmiParser.Foreach_to_exprContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link KharazmiParser#foreach_to_expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitForeach_to_expr(KharazmiParser.Foreach_to_exprContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link KharazmiParser#returnStatement}.
 	 * @param ctx the parse tree
 	 */

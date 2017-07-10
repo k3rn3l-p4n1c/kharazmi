@@ -1,5 +1,6 @@
 package listeners;
 
+import org.antlr.v4.codegen.model.SrcOp;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
 import org.antlr.v4.runtime.tree.TerminalNode;
@@ -516,12 +517,44 @@ public class KharazmiCodeGenerator implements KharazmiListener {
 
     @Override
     public void enterForeachStatement(KharazmiParser.ForeachStatementContext ctx) {
-
+        ctx.l_end = newLabel();
+        ctx.l_loop = newLabel();
     }
 
     @Override
     public void exitForeachStatement(KharazmiParser.ForeachStatementContext ctx) {
+        if (!ctx.expr().type.equals(ctx.foreach_to_expr().expr().type) || !ctx.expr().type.equals("int")) {
+            throw new RuntimeException("cannot iterate on non-int range");
+        }
 
+        writer.println("iinc "+symbolTable.get(ctx.ID().getText()).varId+" 1");
+        writer.println("goto " + ctx.l_loop);
+        writer.println(ctx.l_end+":");
+    }
+
+    @Override
+    public void enterForeach_to_expr(KharazmiParser.Foreach_to_exprContext ctx) {
+
+        String variable_name = ((KharazmiParser.ForeachStatementContext)ctx.getParent()).ID().getSymbol().getText();
+        String variable_type = "int";
+        int id = newVarId();
+        symbolTable.put(variable_name, new SymbolContext(variable_type, variable_name, false, id));
+        writer.println("istore " + id);
+    }
+
+    @Override
+    public void exitForeach_to_expr(KharazmiParser.Foreach_to_exprContext ctx) {
+        String variable_type = "int";
+        int id = newTemp();
+        String variable_name = "$"+id;
+        symbolTable.put(variable_name, new SymbolContext(variable_type, variable_name, false, id));
+        writer.println("istore " + id);
+
+        writer.println(((KharazmiParser.ForeachStatementContext)ctx.getParent()).l_loop+":");
+
+        writer.println("iload " + symbolTable.get(((KharazmiParser.ForeachStatementContext)ctx.getParent()).ID().getSymbol().getText()).varId);
+        writer.println("iload " + id);
+        writer.println("if_icmpge " + ((KharazmiParser.ForeachStatementContext)ctx.getParent()).l_end);
     }
 
     @Override

@@ -227,5 +227,12 @@ public class KharazmiBaseVisitor<T> extends AbstractParseTreeVisitor<T> implemen
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
+	@Override public T visitForeach_to_expr(KharazmiParser.Foreach_to_exprContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
 	@Override public T visitReturnStatement(KharazmiParser.ReturnStatementContext ctx) { return visitChildren(ctx); }
 }

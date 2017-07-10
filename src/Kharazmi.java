@@ -27,9 +27,10 @@ public class Kharazmi {
 //        generateJasminCode( "samples/2_variable.kh");
 //        generateJasminCode( "samples/3_bool_expresion.kh");
 //        generateJasminCode( "samples/3_expresion.kh");
-        generateJasminCode( "samples/4_bool_operator.kh");
+//        generateJasminCode( "samples/4_bool_operator.kh");
 //        generateJasminCode( "samples/4_if.kh");
 //        generateJasminCode( "samples/5_repeat.kh");
+        generateJasminCode( "samples/6_foreach.kh");
         compileJVMClass();
     }
 

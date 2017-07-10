@@ -125,9 +125,11 @@ repeatStatement returns[int itratorIndex, String startLabel, String endLabel]:
 
 repeatBlock: REPEAT COLON block END;
 
-foreachStatement:
-    FOREACH ID IN expr COLON block END
+foreachStatement returns[String l_end, String l_loop]:
+    FOREACH ID From expr foreach_to_expr COLON block END
     ;
+
+foreach_to_expr: TO expr;
 
 returnStatement:
     RETURN ID DOT
@@ -144,7 +146,8 @@ IF: 'اگر';
 ELSE: 'وگرنه';
 WHILE: 'تا هنگامی که';
 FOREACH: 'برای هر';
-IN: 'در';
+From: 'از';
+TO: 'تا';
 HAS: 'دارد';
 WITH: 'با';
 RETURN: 'بازگردان';

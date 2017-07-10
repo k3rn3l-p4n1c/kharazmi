@@ -376,6 +376,18 @@ public class KharazmiBaseListener implements KharazmiListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterForeach_to_expr(KharazmiParser.Foreach_to_exprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitForeach_to_expr(KharazmiParser.Foreach_to_exprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterReturnStatement(KharazmiParser.ReturnStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
