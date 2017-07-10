@@ -106,7 +106,8 @@ public class KharazmiCodeGenerator implements KharazmiListener {
     @Override
     public void exitSubjectiveFunctionCall(KharazmiParser.SubjectiveFunctionCallContext ctx) {
         if (ctx.PRINT_FUNCTION() != null) {
-            writer.println("invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V");
+            String type = ctx.expr().type.equals("str")? "Ljava/lang/String;" : (ctx.expr().type.equals("int")? "I" : "Z");
+            writer.println("invokevirtual java/io/PrintStream/println("+type+")V");
         } else {
             // TODO: call function ctx.ID()
         }
@@ -165,15 +166,10 @@ public class KharazmiCodeGenerator implements KharazmiListener {
             if (!symbolTable.get(variable_name).type.equals(variable_type)) {
                 throw new RuntimeException(variable_name + " except " + symbolTable.get(variable_name) + " but it got " + variable_type);
             }
-
         } else {
             int id = newVarId();
             symbolTable.put(variable_name, new SymbolContext(variable_type, variable_name, false, id));
-            if (ctx.expr().isID) {
-                writer.println("istore " + id);
-            } else {
-                writer.println("istore " + id);
-            }
+            writer.println("istore " + id);
         }
     }
 
@@ -198,14 +194,14 @@ public class KharazmiCodeGenerator implements KharazmiListener {
             if (!ctx.term().type.equals(ctx.expr().type) || !ctx.term().type.equals("int")) {
                 throw new RuntimeException("Can not apply operand " + ctx.ADD().getText() + " between " + ctx.expr().type + " and " + ctx.term().type);
             }
-
             writer.println("iadd");
+            ctx.type = "int";
         } else if (ctx.SUB() != null) {
             if (!ctx.term().type.equals(ctx.expr().type) || !ctx.term().type.equals("int")) {
                 throw new RuntimeException("Can not apply operand " + ctx.SUB().getText() + " between " + ctx.expr().type + " and " + ctx.term().type);
             }
             writer.println("isub");
-
+            ctx.type = "int";
         } else if (ctx.compare_operation() != null) {
             if (ctx.term().type.equals(ctx.expr().type) && ctx.term().type.equals("int")) {
 
@@ -228,6 +224,7 @@ public class KharazmiCodeGenerator implements KharazmiListener {
                 writer.println(l1 + ":");
                 writer.println("iconst_0");
                 writer.println(l2 + ":");
+                ctx.type = "bool";
             } else {
                 throw new RuntimeException("Can not apply operand " + ctx.compare_operation().getText() + " between " + ctx.expr().type + " and " + ctx.term().type);
             }

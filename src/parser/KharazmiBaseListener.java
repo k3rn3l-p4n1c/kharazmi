@@ -1,4 +1,4 @@
-// Generated from /Users/Bardia/IdeaProjects/compiler/grammer/Kharazmi.g4 by ANTLR 4.7
+// Generated from /media/asemanmanzar/Mohsen/Programming/Java/KharazmiCompiler/grammer/Kharazmi.g4 by ANTLR 4.7
 package parser;
 
 import org.antlr.v4.runtime.ParserRuleContext;
