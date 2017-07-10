@@ -268,6 +268,16 @@ public interface KharazmiListener extends ParseTreeListener {
 	 */
 	void exitRepeatStatement(KharazmiParser.RepeatStatementContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link KharazmiParser#repeatBlock}.
+	 * @param ctx the parse tree
+	 */
+	void enterRepeatBlock(KharazmiParser.RepeatBlockContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link KharazmiParser#repeatBlock}.
+	 * @param ctx the parse tree
+	 */
+	void exitRepeatBlock(KharazmiParser.RepeatBlockContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link KharazmiParser#foreachStatement}.
 	 * @param ctx the parse tree
 	 */

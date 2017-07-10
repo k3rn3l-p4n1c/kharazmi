@@ -1,33 +1,9 @@
 package listeners;
 
-import parser.KharazmiParser;
-
-import java.util.HashMap;
-
 public class KharazmiHelperFunctions {
     private KharazmiHelperFunctions() {
     }
 
-    public static String PrintFunctionCall(KharazmiParser.ExprContext exprContext, HashMap<String, KharazmiCodeGenerator.SymbolContext> symbolTable) {
-
-        String type = exprContext.type.equals("str") ? "Ljava/lang/String;" : (exprContext.type.equals("int") ? "I" : "Z");
-
-        if (exprContext.isID) {
-            return "\n; push System.out onto the stack\n" +
-                    "getstatic java/lang/System/out Ljava/io/PrintStream;\n" +
-                    "iload " + symbolTable.get(exprContext.value.toString()).varId + "\n" +
-                    "invokevirtual java/io/PrintStream/println(" + type + ")V\n";
-        } else {
-            return "\n; push System.out and string onto the stack and invoke method\n" +
-                    "getstatic java/lang/System/out Ljava/io/PrintStream;\n" +
-                    (exprContext.type.equals("str") ? "ldc \"" + exprContext.value + "\"\n" : "ldc " + exprContext.value + "\n") +
-                    "invokevirtual java/io/PrintStream/println(" + type + ")V\n";
-        }
-//        else{
-//            throw new RuntimeException("Can not print '" + exprContext.getText() + "'");
-//        }
-//        return "";
-    }
 
     public static String JasminPrefix() {
         return ".class public KharazmiProgram\n" +

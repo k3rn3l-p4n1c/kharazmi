@@ -449,11 +449,30 @@ public class KharazmiCodeGenerator implements KharazmiListener {
 
     @Override
     public void enterRepeatStatement(KharazmiParser.RepeatStatementContext ctx) {
-
+        ctx.itratorIndex = newTemp();
+        ctx.startLabel = newLabel();
+        ctx.endLabel = newLabel();
+        writer.println("iconst_0");
+        writer.println("istore " + ctx.itratorIndex);
+        writer.println(ctx.startLabel + ":");
     }
 
     @Override
     public void exitRepeatStatement(KharazmiParser.RepeatStatementContext ctx) {
+        writer.println("iinc " + ctx.itratorIndex + " 1");
+        writer.println("goto " + ctx.startLabel);
+        writer.println(ctx.endLabel + ":");
+    }
+
+    @Override
+    public void enterRepeatBlock(KharazmiParser.RepeatBlockContext ctx) {
+        KharazmiParser.RepeatStatementContext repeateStCtx = (KharazmiParser.RepeatStatementContext)ctx.getParent();
+        writer.println("iload " + repeateStCtx.itratorIndex);
+        writer.println("if_icmple " + repeateStCtx.endLabel);
+    }
+
+    @Override
+    public void exitRepeatBlock(KharazmiParser.RepeatBlockContext ctx) {
 
     }
 

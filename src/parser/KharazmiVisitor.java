@@ -167,6 +167,12 @@ public interface KharazmiVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitRepeatStatement(KharazmiParser.RepeatStatementContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link KharazmiParser#repeatBlock}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitRepeatBlock(KharazmiParser.RepeatBlockContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link KharazmiParser#foreachStatement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

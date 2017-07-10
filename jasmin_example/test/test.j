@@ -23,73 +23,37 @@
 
 .method public static main([Ljava/lang/String;)V
   .limit stack 2
-  .limit locals 4
-  .line 16
-  0: bipush 20
-  2: istore_1
-  .line 17
-  3: bipush 30
-  5: istore_2
-  .line 18
-  6: iload_1
-  7: iload_2
-  8: if_icmple Label15
-  11: iconst_1
-  12: goto Label16
-Label15:
-  15: iconst_0
-Label16:
-  16: istore_3
-  .line 19
-  17: iload_3
-  18: ifeq Label32
-  .line 20
-  21: getstatic java/lang/System/out Ljava/io/PrintStream;
-  24: ldc "Hi"
-  26: invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V
-  29: goto Label40
-Label32:
-  .line 22
-  32: getstatic java/lang/System/out Ljava/io/PrintStream;
-  35: ldc "Hoy"
-  37: invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V
-Label40:
-  .line 31
-  40: return
+  .limit locals 3
+  .line 6
+  0: iconst_0
+  1: istore_2
+Label2:
+  2: iload_2
+  3: bipush 10
+  5: if_icmple Label22
+  .line 7
+  8: getstatic java/lang/System/out Ljava/io/PrintStream;
+  11: ldc "Hello"
+  13: invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V
+  .line 6
+  16: iinc 2 1
+  19: goto Label2
+Label22:
+  .line 9
+  22: return
   ; append_frame (frameNumber = 0)
-  ; frame_type = 253, offset_delta = 15
-  ; frame bytes: 253 0 15 1 1 
+  ; frame_type = 253, offset_delta = 2
+  ; frame bytes: 253 0 2 0 1 
   .stack 
-    offset 15
-    locals Integer
+    offset 2
+    locals Top
     locals Integer
     .end stack
-  ; same_locals_1_stack_item_frame (frameNumber = 1)
-  ; frame_type = 64, offset_delta = 0
-  ; frame bytes: 64 1 
+  ; chop_frame (frameNumber = 1)
+  ; frame_type = 249, offset_delta = 19
+  ; frame bytes: 249 0 19 
   .stack 
-    offset 16
-    locals Integer
-    locals Integer
-    stack Integer
-    .end stack
-  ; append_frame (frameNumber = 2)
-  ; frame_type = 252, offset_delta = 15
-  ; frame bytes: 252 0 15 1 
-  .stack 
-    offset 32
-    locals Integer
-    locals Integer
-    locals Integer
-    .end stack
-  ; same_frame (frameNumber = 3)
-  ; frame_type = 7, offset_delta = 7
-  ; frame bytes: 7 
-  .stack 
-    offset 40
-    locals Integer
-    locals Integer
-    locals Integer
+    offset 22
     .end stack
 .end method
 

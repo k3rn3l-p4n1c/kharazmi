@@ -328,6 +328,18 @@ public class KharazmiBaseListener implements KharazmiListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterRepeatBlock(KharazmiParser.RepeatBlockContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitRepeatBlock(KharazmiParser.RepeatBlockContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterForeachStatement(KharazmiParser.ForeachStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}

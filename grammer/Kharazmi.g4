@@ -116,9 +116,11 @@ whileStatement:
     WHILE expr block END
     ;
 
-repeatStatement:
-    expr REPEAT COLON block END
+repeatStatement returns[int itratorIndex, String startLabel, String endLabel]:
+    expr repeatBlock
     ;
+
+repeatBlock: REPEAT COLON block END;
 
 foreachStatement:
     FOREACH ID IN expr COLON block END
