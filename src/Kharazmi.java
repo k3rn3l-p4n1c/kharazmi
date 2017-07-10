@@ -29,7 +29,7 @@ public class Kharazmi {
             switch (args[i]) {
                 case "--help":
                 case "-h":
-                    System.out.println("usage: Scrawl [--output <output name>] <file> \n");
+                    System.out.println("usage: Kharazmi [--output <output name>] <file> \n");
                     return;
                 case "--ouput":
                 case "-o":
@@ -43,7 +43,7 @@ public class Kharazmi {
 
         if (inputPath == null) {
             System.out.println("No .kh file is specified");
-            System.out.println("usage: Scrawl [--output <output name>] <file> \n");
+            System.out.println("usage: Kharazmi [--output <output name>] <file> \n");
             return;
         }
         String jasminPath = generateJasminCode(inputPath, outputName);
@@ -87,7 +87,7 @@ public class Kharazmi {
         fis.close();
 
         URL location = Main.class.getProtectionDomain().getCodeSource().getLocation();
-        URL jasmin_path = new URL(location, "../" + outputName + ".j");
+        URL jasmin_path = new URL(location, outputName + ".j");
         PrintWriter writer = new PrintWriter(jasmin_path.getPath(), "UTF-8");
 
         ParseTreeWalker walker = new ParseTreeWalker();
