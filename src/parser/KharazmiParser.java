@@ -1745,6 +1745,8 @@ public class KharazmiParser extends Parser {
 	}
 
 	public static class IfStatementContext extends ParserRuleContext {
+		public String elseLabel;
+		public String endLabel;
 		public IfBlockContext ifBlock() {
 			return getRuleContext(IfBlockContext.class,0);
 		}

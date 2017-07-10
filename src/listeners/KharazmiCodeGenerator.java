@@ -62,15 +62,6 @@ public class KharazmiCodeGenerator implements KharazmiListener {
         return "L" + (nextLabelNumber);
     }
 
-    private String lastLabel() {
-        return lastLabel(0);
-    }
-
-    private String lastLabel(int i) {
-        return "L" + (nextLabelNumber - i);
-
-    }
-
 
     @Override
     public void enterProg(KharazmiParser.ProgContext ctx) {
@@ -398,12 +389,13 @@ public class KharazmiCodeGenerator implements KharazmiListener {
 
     @Override
     public void enterIfStatement(KharazmiParser.IfStatementContext ctx) {
-
+        ctx.endLabel = newLabel();
+        ctx.elseLabel = newLabel();
     }
 
     @Override
     public void exitIfStatement(KharazmiParser.IfStatementContext ctx) {
-        writer.println(lastLabel() + ":");
+        writer.println(ctx.endLabel + ":");
     }
 
     @Override
@@ -413,8 +405,10 @@ public class KharazmiCodeGenerator implements KharazmiListener {
 
     @Override
     public void exitIfBlock(KharazmiParser.IfBlockContext ctx) {
-        writer.println("goto " + newLabel());
-        writer.println(lastLabel(1) + ":");
+        KharazmiParser.IfStatementContext ifStCtx = (KharazmiParser.IfStatementContext) ctx.getParent();
+
+        writer.println("goto " + ifStCtx.endLabel);
+        writer.println(ifStCtx.elseLabel + ":");
     }
 
     @Override
@@ -434,7 +428,8 @@ public class KharazmiCodeGenerator implements KharazmiListener {
 
     @Override
     public void exitIfHead(KharazmiParser.IfHeadContext ctx) {
-        writer.println("ifeq " + newLabel());
+        KharazmiParser.IfStatementContext ifStCtx = (KharazmiParser.IfStatementContext) ctx.getParent().getParent();
+        writer.println("ifeq " + ifStCtx.elseLabel);
     }
 
     @Override

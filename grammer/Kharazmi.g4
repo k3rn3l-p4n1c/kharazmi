@@ -98,7 +98,7 @@ parameters:
     ID (AND ID)*
     ;
 
-ifStatement:
+ifStatement returns[String elseLabel, String endLabel]:
     ifBlock (elseBlock)? END
     ;
 

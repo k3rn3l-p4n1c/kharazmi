@@ -23,7 +23,7 @@ import java.util.jar.Manifest;
 public class Kharazmi {
 
     public static void main(String[] args) throws IOException {
-        genrateAssemblyCode( "samples/5_repeat.kh");
+        genrateAssemblyCode( "samples/4_if.kh");
         compileJVMClass();
     }
 
