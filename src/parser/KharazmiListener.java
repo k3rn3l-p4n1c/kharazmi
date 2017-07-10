@@ -218,6 +218,16 @@ public interface KharazmiListener extends ParseTreeListener {
 	 */
 	void exitFunctionDefinition(KharazmiParser.FunctionDefinitionContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link KharazmiParser#functionDefinitionHead}.
+	 * @param ctx the parse tree
+	 */
+	void enterFunctionDefinitionHead(KharazmiParser.FunctionDefinitionHeadContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link KharazmiParser#functionDefinitionHead}.
+	 * @param ctx the parse tree
+	 */
+	void exitFunctionDefinitionHead(KharazmiParser.FunctionDefinitionHeadContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link KharazmiParser#parameters}.
 	 * @param ctx the parse tree
 	 */
@@ -227,6 +237,16 @@ public interface KharazmiListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitParameters(KharazmiParser.ParametersContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link KharazmiParser#param}.
+	 * @param ctx the parse tree
+	 */
+	void enterParam(KharazmiParser.ParamContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link KharazmiParser#param}.
+	 * @param ctx the parse tree
+	 */
+	void exitParam(KharazmiParser.ParamContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link KharazmiParser#ifStatement}.
 	 * @param ctx the parse tree

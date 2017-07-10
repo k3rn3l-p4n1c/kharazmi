@@ -1,15 +1,16 @@
 
 public class Test {
 
+
+
     public static void main(String[] args) {
-        int a5 = 1;
-        int a4 = 1;
-        int a3 = 1;
-        int a2 = 1;
-        int a1 = 1;
 
-        a3++;
+        System.out.println(func1(4, 2, 8));
 
+    }
+    static boolean func1(int a, int b, int c){
+        int d = c;
+        return false;
     }
 
 }

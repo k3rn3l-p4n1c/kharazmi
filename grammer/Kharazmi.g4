@@ -14,7 +14,7 @@ statement:
     | repeatStatement
     | foreachStatement
     | returnStatement // TODO: remove, blocks outside functions cannot return something.
-    | functionCall
+    | functionCall DOT
 //    | getAttr
     | methodCall
     | subjectiveFunctionCall
@@ -25,8 +25,8 @@ subjectiveFunctionCall:
     | expr 'را' PRINT_FUNCTION DOT;
 
 functionCall:
-    ID (arguments)? DOT
-    | PRINT_FUNCTION (arguments)? DOT;
+    ID arguments
+    | PRINT_FUNCTION arguments;
 
 methodCall:
     ID ID (arguments)? DOT
@@ -36,9 +36,10 @@ getAttr:
     ID KASRE ID;
 
 arguments:
-      WITH expr (AND WITH expr)* (AND WITH ID COLON expr)*
-    | WITH ID COLON expr (AND WITH ID COLON expr)*
-    ;
+    WITH expr (AND WITH expr)*;
+//      WITH expr (AND WITH expr)* (AND WITH ID COLON expr)*
+//    | WITH ID COLON expr (AND WITH ID COLON expr)*
+//    ;
 
 
 assignmentStatement:
@@ -94,12 +95,23 @@ methodDefinition:
     ;
 
 functionDefinition:
-    FUNCTION ID (WITH parameters)? COLON block END
+    functionDefinitionHead COLON block END
     ;
 
+functionDefinitionHead: FUNCTION (RETURN_STR | RETURN_INT | RETURN_BOOL)? ID (parameters)? ;
+
+RETURN_STR: 'رشته ای';
+RETURN_INT: 'عددی';
+RETURN_BOOL: 'بولی';
+PARAM_STR: 'رشته';
+PARAM_INT: 'عدد';
+PARAM_BOOL: 'بولین';
+
 parameters:
-    ID (AND ID)*
+    WITH param (AND WITH param)*
     ;
+
+param: (PARAM_STR | PARAM_INT | PARAM_BOOL) ID;
 
 ifStatement returns[String elseLabel, String endLabel]:
     ifBlock (elseBlock)? END

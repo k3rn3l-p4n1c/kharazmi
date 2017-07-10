@@ -137,11 +137,23 @@ public interface KharazmiVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitFunctionDefinition(KharazmiParser.FunctionDefinitionContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link KharazmiParser#functionDefinitionHead}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFunctionDefinitionHead(KharazmiParser.FunctionDefinitionHeadContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link KharazmiParser#parameters}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitParameters(KharazmiParser.ParametersContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link KharazmiParser#param}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitParam(KharazmiParser.ParamContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link KharazmiParser#ifStatement}.
 	 * @param ctx the parse tree
