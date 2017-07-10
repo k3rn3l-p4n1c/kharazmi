@@ -1,2 +1,6 @@
+rm *.j
 javac Test.java
-java -jar classfileanalyzer.jar Test.class > test.j
+for i in *.class; do
+    java -jar classfileanalyzer.jar "${i}" > "${i}.j"
+done
+rm *.class
